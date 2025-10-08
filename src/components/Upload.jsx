@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 const authenticator = async () => {
     try {
-        const response = await fetch(`${configuration.apiUrl}/posts/upload-auth`);
+        const response = await fetch(`${configuration.apiUrl}/blogs/upload-auth`);
 
         if (!response.ok) {
             const errorText = await response.text();

@@ -31,10 +31,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
+  // const supabase = await createClient();
+  // const { data } = await supabase.auth.getUser();
 
-  console.log("data ==>", data);
+  // console.log("data ==>", data);
 
   return (
     <html lang="en">
@@ -42,13 +42,13 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <Providers initialUser={data?.user || null}>
-          <div className="font-sans px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+        {/* <Providers initialUser={data?.user || null}> */}
+          <div className="container">
             <Navbar />
             {children}
             <ToastContainer position="bottom-right" autoClose={2000} />
           </div>
-        </Providers>
+        {/* </Providers> */}
       </body>
     </html>
   );

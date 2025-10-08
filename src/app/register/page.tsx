@@ -11,10 +11,7 @@ import { signup } from "../../../actions/login/actions";
 import { toast } from "react-toastify";
 
 const RegisterPage = () => {
-  //   const { signup, isSigninpUp, googleSignup } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
-  //   const auth = getAuth(app);
-  //   const provider = new GoogleAuthProvider();
   const {
     register,
     handleSubmit,
@@ -27,8 +24,6 @@ const RegisterPage = () => {
   };
 
   const onSubmit = async (data: any) => {
-    // redirect("/verify");
-
     const result = await signup(data);
 
     if (result.error) {

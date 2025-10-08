@@ -3,15 +3,13 @@
 import { useEffect, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
-// import { Link, useLocation } from 'react-router-dom';
-// import Image from './Image';
-// import { useAuthStore } from '../store/useAuthStore';
 import { ProfilePreviewDialog } from "./ProfilePreviewDialog";
 import { ProfileEditDialog } from "./ProfileEditDialog";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@/context/user-provider";
 import { createClient } from "../../utils/supabase/client";
+import { redirect, useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -19,27 +17,35 @@ const Navbar = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
 
-  const { user, loading } = useUser();
+  // const { user, loading } = useUser();
+  const router = useRouter();
 
-  // const location = useLocation();
-
-  // TODO
   // useEffect(() => {
-  //     setOpen(false);
-  // }, [location]);
+  //   const supabase = createClient();
+  //   const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+  //     if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+  //       router.refresh();
+  //     }
+  //   });
+  //   return () => subscription?.unsubscribe();
+  // }, [router]);
+
 
   const navLinks = [
     { to: "/", label: "Home" },
-    { to: "/posts?sort=trending", label: "Trending" },
-    { to: "/posts?sort=popular", label: "Most Popular" },
-    { to: "/saved-posts", label: "Saved Posts" },
+    { to: "/blogs?sort=trending", label: "Trending" },
+    { to: "/blogs?sort=popular", label: "Most Popular" },
+    { to: "/saved-blogs", label: "Saved Posts" },
   ];
-
-  console.log("user ==>", user);
 
   const logout = async () => {
     const supabase = await createClient();
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      // router.push("/login");
+      // redirect("/login");
+      router.refresh();
+    }
   };
 
   return (
@@ -80,7 +86,7 @@ const Navbar = () => {
                 Write Blog
               </button>
             </Link>
-            {!user ? (
+            {/* {!user ? (
               <Link href="/login">
                 <button className="py-2 px-4 rounded-3xl bg-blue-800 hover:bg-blue-600 text-white cursor-pointer">
                   Login 👋
@@ -91,7 +97,7 @@ const Navbar = () => {
                 onClick={() => setProfileOpen(true)}
                 className="cursor-pointer"
               >
-                {/* {selectedImg ? (
+                {selectedImg ? (
                   <img
                     src={selectedImg.url}
                     alt="Profile"
@@ -105,17 +111,9 @@ const Navbar = () => {
                     height={36}
                     className="rounded-full w-10 h-10"
                   />
-                )} */}
-
-                <Image
-                  src={"/userIcon.jpg"}
-                  alt="profile"
-                  className="rounded-full w-full h-full"
-                  width={36}
-                  height={36}
-                />
+                )}
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -133,7 +131,7 @@ const Navbar = () => {
               </Link>
             </div>
           ))}
-          {!user ? (
+          {/* {!user ? (
             <Link href="/login">
               <button className="py-2 px-4 rounded-3xl bg-blue-800 hover:bg-blue-600 text-white cursor-pointer">
                 Login 👋
@@ -144,7 +142,7 @@ const Navbar = () => {
               onClick={() => setProfileOpen(true)}
               className="cursor-pointer rounded-full w-10 h-10"
             >
-              {/* {selectedImg ? (
+              {selectedImg ? (
                 <img
                   src={selectedImg.url}
                   alt="Profile"
@@ -156,21 +154,13 @@ const Navbar = () => {
                   alt="profile"
                   className="rounded-full w-full h-full"
                 />
-              )} */}
-
-              <Image
-                src={"/userIcon.jpg"}
-                alt="profile"
-                className="rounded-full w-full h-full"
-                width={30}
-                height={30}
-              />
+              )}
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
-      <ProfilePreviewDialog
+      {/* <ProfilePreviewDialog
         isOpen={profileOpen}
         onClose={() => setProfileOpen(false)}
         user={user}
@@ -193,7 +183,7 @@ const Navbar = () => {
         user={user}
         selectedImg={selectedImg}
         setSelectedImg={setSelectedImg}
-      />
+      /> */}
     </>
   );
 };

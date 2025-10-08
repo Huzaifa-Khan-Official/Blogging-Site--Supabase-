@@ -5,7 +5,7 @@
 import { toast } from "react-toastify";
 
 // const fetchPosts = async (pageParam) => {
-//   const res = await axiosInstance.get("/users/my-posts", {
+//   const res = await axiosInstance.get("/users/my-blogs", {
 //     params: {
 //       page: pageParam,
 //       limit: 5,
@@ -24,7 +24,7 @@ const MyPostsPage = () => {
 //     isFetchingNextPage,
 //     status,
 //   } = useInfiniteQuery({
-//     queryKey: ["posts"],
+//     queryKey: ["blogs"],
 //     queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
 //     getNextPageParam: (lastPage, pages) =>
 //       lastPage.hasMore ? pages.length + 1 : undefined,
@@ -35,17 +35,17 @@ const MyPostsPage = () => {
 //     return <p>An error occurred.</p>;
 //   }
 
-//   const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
+//   const allPosts = data?.pages?.flatMap((page) => page.blogs) || [];
 
   return (
     <div>
       <h1 className="mt-5 mb-8 text-2xl">My Blog's</h1>
 
       {/* {isFetching ? (
-        <p className="text-center mb-6">Loading posts...</p>
+        <p className="text-center mb-6">Loading blogs...</p>
       ) : (
         allPosts.length === 0 && (
-          <p className="text-center mb-6">No posts found.</p>
+          <p className="text-center mb-6">No blogs found.</p>
         )
       )} */}
 
@@ -58,7 +58,7 @@ const MyPostsPage = () => {
           endMessage={
             allPosts.length > 0 && (
               <p className="text-center mb-6">
-                <b>All posts loaded!</b>
+                <b>All blogs loaded!</b>
               </p>
             )
           }

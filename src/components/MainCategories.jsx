@@ -8,37 +8,37 @@ const MainCategories = () => {
             {/* links */}
             <div className='flex-1 flex items-center gap-1 flex-wrap'>
                 <Link
-                    to="/posts"
+                    to="/blogs"
                     className="bg-blue-800 text-white rounded-full px-4 py-2"
                 >
                     All Posts
                 </Link>
                 <Link
-                    to="/posts?cat=web-design"
+                    to="/blogs?cat=web-design"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Web Design
                 </Link>
                 <Link
-                    to="/posts?cat=development"
+                    to="/blogs?cat=development"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Development
                 </Link>
                 <Link
-                    to="/posts?cat=databases"
+                    to="/blogs?cat=databases"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Databases
                 </Link>
                 <Link
-                    to="/posts?cat=seo"
+                    to="/blogs?cat=seo"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Search Engines
                 </Link>
                 <Link
-                    to="/posts?cat=marketing"
+                    to="/blogs?cat=marketing"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Marketing

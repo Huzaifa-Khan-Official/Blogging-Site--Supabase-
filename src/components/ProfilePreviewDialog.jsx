@@ -32,7 +32,7 @@ export function ProfilePreviewDialog({ isOpen, onClose, user, onUpdateProfile, o
               Update Profile
             </button>
             <Link
-              href="/my-posts"
+              href="/my-blogs"
               className="w-full px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-300 transition-colors cursor-pointer text-center"
               onClick={onClose}
             >

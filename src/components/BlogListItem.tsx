@@ -1,73 +1,74 @@
 import React, { useState } from 'react';
-import Image from './Image';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { format } from "timeago.js";
 import { HiDotsVertical } from "react-icons/hi";
-import { usePostStore } from '../store/usePostStore';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
-const PostListItem = ({ post, onDelete }) => {
-    const { deletePost } = usePostStore();
-    const location = useLocation();
+const BlogListItem = ({ blog }: {blog: BlogPost}) => {
+    // const { deletePost } = usePostStore();
     const [menuOpen, setMenuOpen] = useState(false);
-    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setMenuOpen((prev) => !prev);
     };
 
     const handleUpdate = () => {
-        navigate(`/write/${post.slug}`);
+        redirect(`/write/${blog.slug}`);
         setMenuOpen(false);
     };
 
-    const handleDelete = () => {
-        deletePost(post._id, () => { });
-        setMenuOpen(false);
-    };
+    // const handleDelete = () => {
+    //     deletePost(blog.id, () => { });
+    //     setMenuOpen(false);
+    // };
+
+    console.log("blog ==>", blog);
 
     return (
         <div className='relative flex flex-col mb-8 sm:flex-row gap-3'>
             {/* image */}
-            {post?.img && (
+            {blog?.img && (
                 <div className='sm:w-1/2 xl:w-1/3'>
-                    <Image
+                    {/* <Image
                         src={post?.img}
                         className='rounded-2xl object-cover aspect-video'
                         w={540}
-                    />
+                    /> */}
+
+                    <img src={blog?.img} alt={blog?.title} className='rounded-2xl object-cover aspect-video' />
                 </div>
             )}
 
             {/* details & title */}
             <div className='flex flex-col gap-1 sm:w-1/2 xl:w-2/3'>
                 {/* title */}
-                <Link to={`/${post?.slug}`} className='text-xl font-semibold'>
-                    {post?.title}
+                <Link href={`/blog/${blog?.slug}`} className='text-xl font-semibold'>
+                    {blog?.title}
                 </Link>
 
                 {/* details */}
                 <div className='flex items-center gap-2 text-gray-400 text-sm flex-wrap'>
                     <span>Written by</span>
-                    <Link
+                    {/* <Link
                         className='text-blue-800'
-                        to={`/posts?author=${post?.user.username}`}
+                        href={`/blogs?author=${blog?.user.username}`}
                     >
-                        {post?.user.username}
-                    </Link>
+                        {blog?.user.username}
+                    </Link> */}
                     <span>on</span>
                     <Link
                         className='text-blue-800'
-                        to={`/posts?cat=${post?.category}`}
+                        href={`/blogs?cat=${blog?.category}`}
                     >
-                        {post?.category}
+                        {blog?.category}
                     </Link>
-                    <span>{format(post?.createdAt)}</span>
+                    <span>{format(blog?.created_at)}</span>
                 </div>
 
                 {/* description */}
-                <p>{post?.desc}</p>
+                <p>{blog?.description}</p>
                 <Link
-                    to={`/${post?.slug}`}
+                    href={`/blog/${blog?.slug}`}
                     className='underline text-sm text-blue-800'
                 >
                     Read More
@@ -75,7 +76,7 @@ const PostListItem = ({ post, onDelete }) => {
             </div>
 
             {/* Options menu */}
-            {location.pathname === '/my-posts' && (
+            {location.pathname === '/my-blogs' && (
                 <div className='absolute top-2 right-2'>
                     <button
                         onClick={toggleMenu}
@@ -92,7 +93,7 @@ const PostListItem = ({ post, onDelete }) => {
                                 Update
                             </button>
                             <button
-                                onClick={handleDelete}
+                                // onClick={handleDelete} todo
                                 className='block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600'
                             >
                                 Delete
@@ -105,4 +106,4 @@ const PostListItem = ({ post, onDelete }) => {
     );
 };
 
-export default PostListItem;
+export default BlogListItem;

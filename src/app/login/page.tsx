@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { login } from "../../../actions/login/actions";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +17,7 @@ const LoginPage = () => {
     formState: { errors },
     reset,
   } = useForm();
+  const router = useRouter();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -70,9 +71,9 @@ const LoginPage = () => {
                 })}
               />
 
-              {/* <p className="text-red-500 text-xs italic mt-2">
-                {errors.email_or_username && errors.email_or_username.message}
-              </p> */}
+              {errors.email && errors.email?.message && (
+                <p className="text-red-500">{String(errors.email.message)}</p>
+              )}
             </div>
 
             {/* Password Input */}
@@ -162,7 +163,7 @@ const LoginPage = () => {
             {/* Google Button */}
             <button
               className="flex justify-center items-center w-full h-10 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              //   onClick={handleGoogleBtnClick} TODO
+            //   onClick={handleGoogleBtnClick} TODO
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
