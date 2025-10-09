@@ -3,10 +3,8 @@ import "react-quill-new/dist/quill.snow.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { useUser } from "@/context/user-provider";
-import { saveBlog, uploadFile, deleteFile } from "../../../actions/write/actions";
 import { toast } from "react-toastify";
+import { saveBlog, uploadFile, deleteFile } from "@/actions/write/actions";
 
 // ReactQuill ko dynamically import karein with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill-new"), {
@@ -29,7 +27,7 @@ const Write = () => {
   const [progress, setProgress] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  
+
   const coverImgRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -58,7 +56,7 @@ const Write = () => {
       toast.error(`Image size should be less than 5MB`);
       return null;
     }
-    
+
     if (type === 'video' && file.size > FILE_LIMITS.video) {
       toast.error(`Video size should be less than 20MB`);
       return null;
@@ -88,7 +86,7 @@ const Write = () => {
         };
 
         setUploadedFiles(prev => [...prev, uploadedFile]);
-        
+
         // Add to editor content
         if (type === 'image') {
           setValue(prev => prev + `<div class="uploaded-image-container" data-file-name="${file.name}">
@@ -121,15 +119,15 @@ const Write = () => {
     try {
       // Remove from uploaded files list
       setUploadedFiles(prev => prev.filter(file => file.url !== fileUrl));
-      
+
       // Remove from editor content
       const fileElementClass = type === 'image' ? 'uploaded-image-container' : 'uploaded-video-container';
       const regex = new RegExp(`<div class="${fileElementClass}" data-file-name="${fileName}"[\\s\\S]*?<\\/div>`, 'g');
       setValue(prev => prev.replace(regex, ''));
-      
+
       // Delete from storage
       await deleteFile(fileUrl);
-      
+
       toast.success(`${type === 'image' ? 'Image' : 'Video'} deleted successfully!`);
     } catch (error) {
       toast.error(`Failed to delete ${type}`);
@@ -175,7 +173,7 @@ const Write = () => {
 
   const onSubmit = async (data: any) => {
     let imageUrl: string | null = null;
-    
+
     if (coverImage) {
       imageUrl = await uploadFile(coverImage);
     }
@@ -189,7 +187,7 @@ const Write = () => {
     };
 
     const res = await saveBlog(formData);
-    
+
     if (res.error) {
       toast.error(res.error);
     } else {
@@ -205,7 +203,7 @@ const Write = () => {
   useEffect(() => {
     // @ts-ignore
     window.handleDeleteFile = handleDeleteFile;
-    
+
     return () => {
       // @ts-ignore
       delete window.handleDeleteFile;
@@ -220,14 +218,14 @@ const Write = () => {
         className="flex flex-col gap-6 flex-1 mb-20"
       >
         {/* Cover Image */}
-        <button 
-          type="button" 
-          className="p-2 px-4 rounded-xl bg-white shadow-md w-fit cursor-pointer" 
-          onClick={() => coverImgRef.current?.click()} 
+        <button
+          type="button"
+          className="p-2 px-4 rounded-xl bg-white shadow-md w-fit cursor-pointer"
+          onClick={() => coverImgRef.current?.click()}
         >
           Choose a cover image
         </button>
-        
+
         <input
           type="file"
           accept="image/*"
@@ -239,7 +237,7 @@ const Write = () => {
           }}
           ref={coverImgRef}
         />
-        
+
         {cover && (
           <img
             src={cover}
@@ -308,8 +306,8 @@ const Write = () => {
         {/* Progress Bar */}
         {progress > 0 && progress < 100 && (
           <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div 
-              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+            <div
+              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             ></div>
             <p className="text-sm text-gray-600 mt-1">Upload Progress: {progress}%</p>
@@ -320,15 +318,15 @@ const Write = () => {
         <div className="flex w-full">
           <div className="flex flex-col gap-2 mr-2">
             {/* Image Upload Button */}
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="toolbar-button"
               onClick={handleImageUpload}
               title="Upload Image (Max 5MB)"
             >
               📷
             </button>
-            
+
             <input
               type="file"
               accept="image/*"
@@ -338,15 +336,15 @@ const Write = () => {
             />
 
             {/* Video Upload Button */}
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="toolbar-button"
               onClick={handleVideoUpload}
               title="Upload Video (Max 20MB)"
             >
               ▶️
             </button>
-            
+
             <input
               type="file"
               accept="video/*"
@@ -367,7 +365,7 @@ const Write = () => {
                 toolbar: [
                   [{ 'header': [1, 2, 3, false] }],
                   ['bold', 'italic', 'underline', 'strike'],
-                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                   ['link', 'blockquote', 'code-block'],
                   ['clean']
                 ],

@@ -3,9 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createClient } from "../../utils/supabase/client";
-import { Providers } from "./providers";
-import Navbar from "../components/Navbar";
+import { AuthProvider } from "@/context/AuthContext";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,24 +30,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const supabase = await createClient();
-  // const { data } = await supabase.auth.getUser();
-
-  // console.log("data ==>", data);
-
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {/* <Providers initialUser={data?.user || null}> */}
+        <AuthProvider>
           <div className="container">
             <Navbar />
             {children}
             <ToastContainer position="bottom-right" autoClose={2000} />
           </div>
-        {/* </Providers> */}
+        </AuthProvider>
       </body>
     </html>
   );

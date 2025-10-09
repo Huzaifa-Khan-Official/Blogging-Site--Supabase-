@@ -5,9 +5,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
-import { login } from "../../../actions/login/actions";
 import { toast } from "react-toastify";
-import { redirect, useRouter } from "next/navigation";
+import { login } from "@/actions/login/actions";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +16,6 @@ const LoginPage = () => {
     formState: { errors },
     reset,
   } = useForm();
-  const router = useRouter();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -26,12 +24,16 @@ const LoginPage = () => {
   const onSubmit = async (data: any) => {
     const result = await login(data);
 
-    if (result.error) {
-      toast.error(result.error);
+    if (result?.error) {
+      toast.error(result.error)
     } else {
-      toast.success("Logged in successfully");
-      reset();
-      redirect("/");
+      toast.success("Logged in successfully", {
+        autoClose: 1500,
+        onClose: () => {
+          reset();
+          location.href = "/";
+        },
+      });
     }
   };
 

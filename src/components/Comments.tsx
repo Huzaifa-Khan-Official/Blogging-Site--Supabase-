@@ -1,7 +1,9 @@
-import React, { useRef } from 'react'
 import Comment from './Comment'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import CommentSkeleton from './skeletons/CommentSkeleton';
+import { getComments, addComment } from '@/actions/comment/actions';
 
 // const fetchComments = async (blogId: string) => {
 //     const res = await axiosInstance.get(`/comments/${blogId}`);
@@ -9,13 +11,28 @@ import { useForm } from 'react-hook-form';
 // }
 
 const Comments = ({ blogId }: { blogId: string }) => {
-    const textareaRef = useRef(null);
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [loading, setLoading] = useState(true);
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
     } = useForm();
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            setLoading(true);
+            const { data, error } = await getComments(blogId);
+
+            if (data) {
+                setComments(data);
+                setLoading(false);
+            }
+        }
+
+        fetchComments();
+    }, [])
 
     // const { isPending, error, data } = useQuery({
     //     queryKey: ['comments', postId],
@@ -49,8 +66,18 @@ const Comments = ({ blogId }: { blogId: string }) => {
     // if (isPending) return <div>Loading...</div>
     // if (error) return <div>Error: {error.message}</div>
 
-    const onSubmit = (data: any) => {
+    const onSubmit = async (data: any) => {
         // mutation.mutate(data);
+        const { success, error } = await addComment(blogId, data.description);
+
+        if (error) {
+            toast.error(error);
+        }
+
+        if (success) {
+            toast.success("Comment added successfully");
+            reset();
+        }
     }
     return (
         <div className='flex flex-col gap-6 lg:w-3/5'>
@@ -102,6 +129,19 @@ const Comments = ({ blogId }: { blogId: string }) => {
                 </>
             )
             } */}
+
+            {
+                loading && [...Array(3)].map((_, i) => (
+                    <CommentSkeleton key={i} />
+                ))
+            }
+            {
+                comments.length === 0 ? (
+                    <p className='text-gray-500'>No comments yet</p>
+                ) : comments.map(comment => (
+                    <Comment key={comment.id} comment={comment} blogId={blogId} />
+                ))
+            }
         </div>
     )
 }

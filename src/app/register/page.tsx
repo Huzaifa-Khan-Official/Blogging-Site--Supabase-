@@ -7,8 +7,8 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { signup } from "../../../actions/login/actions";
 import { toast } from "react-toastify";
+import { signup } from "@/actions/login/actions";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,15 +31,16 @@ const RegisterPage = () => {
     } else {
       toast.success("Account created successfully", {
         autoClose: 1500,
-        onClose: () => {
-          toast.success(
-            "We have send you an email. Click the link to verify you account",
-            {
-              autoClose: 1500,
-            },
-          );
-        },
       });
+      toast.success(
+        "We have send you an email. Click the link to verify you account",
+        {
+          autoClose: 1500,
+          onClose: () => {
+            redirect("/login");
+          },
+        },
+      );
       reset();
     }
 
@@ -197,7 +198,7 @@ const RegisterPage = () => {
             {/* Google Button */}
             <button
               className="flex justify-center items-center w-full h-10 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              //   onClick={handleGoogleBtnClick}
+            //   onClick={handleGoogleBtnClick}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

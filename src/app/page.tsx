@@ -3,9 +3,8 @@
 import MainCategories from '../components/MainCategories'
 import FeaturedPosts from '../components/FeaturedPosts'
 import Link from 'next/link'
-import { useUser } from '@/context/user-provider'
-import BlogList from '../components/BlogList'
 import IntroductionSection from '@/components/IntroductionSection'
+import BlogList from '@/components/BlogList'
 
 const Home = () => {
   // const {user} = useUser()

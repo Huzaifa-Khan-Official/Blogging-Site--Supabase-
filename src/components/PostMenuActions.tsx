@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
-import { deleteBlog } from '../../actions/write/actions';
+import { deleteBlog } from '@/actions/write/actions';
 import { toast } from 'react-toastify';
 
 const PostMenuActions = ({ blog }: {blog: BlogPost}) => {

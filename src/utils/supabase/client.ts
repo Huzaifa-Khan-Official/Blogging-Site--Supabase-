@@ -1,5 +1,5 @@
+import configs from "@/config/config";
 import { createBrowserClient } from "@supabase/ssr";
-import configs from "../../config/config";
 
 export function createClient() {
   return createBrowserClient(

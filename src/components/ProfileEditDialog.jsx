@@ -3,7 +3,6 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import { IoCamera } from "react-icons/io5";
 // import Image from "./Image";
 // import Upload from "./Upload";
-import { useUser } from "@/context/user-provider";
 
 export function ProfileEditDialog({
   isOpen,

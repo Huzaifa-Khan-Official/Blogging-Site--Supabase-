@@ -1,8 +1,6 @@
 import React from 'react'
 import Image from './Image';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import configuration from '../configuration/config';
 import { useQuery } from '@tanstack/react-query';
 import { format } from "timeago.js"
 import { axiosInstance } from '../lib/axios';

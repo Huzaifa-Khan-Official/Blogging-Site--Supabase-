@@ -7,11 +7,11 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import PostMenuActions from '@/components/PostMenuActions';
-import { getBlog } from '../../../../actions/write/actions';
 import Image from 'next/image';
 import Search from '@/components/Search';
-import SinglePostSkeleton from '@/components/SinglePostSkeleton';
+import SinglePostSkeleton from '@/components/skeletons/SinglePostSkeleton';
 import Comments from '@/components/Comments';
+import { getBlog } from '@/actions/write/actions';
 
 const SinglePostPage = () => {
     const { slug } = useParams<{ slug: string }>();

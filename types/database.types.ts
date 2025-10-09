@@ -29,7 +29,7 @@ interface BlogPost {
 interface Comment {
   id: string;
   user_id?: string;
-  post_id: string;
+  blog_id: string;
   description: string;
   created_at: string;
   profiles?: UserProfile; // Joined data

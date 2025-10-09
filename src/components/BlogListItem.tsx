@@ -22,8 +22,6 @@ const BlogListItem = ({ blog }: {blog: BlogPost}) => {
     //     setMenuOpen(false);
     // };
 
-    console.log("blog ==>", blog);
-
     return (
         <div className='relative flex flex-col mb-8 sm:flex-row gap-3'>
             {/* image */}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import BlogListItem from "./BlogListItem";
 import { toast } from "react-toastify";
-import BlogCardSkeleton from "./BlogCardSkeleton";
-import { getBlogs } from "../../actions/write/actions";
+import { getBlogs } from "@/actions/write/actions";
+import BlogCardSkeleton from"@/components/skeletons/BlogCardSkeleton"
+import BlogListItem from "./BlogListItem";
 // import InfiniteScroll from "react-infinite-scroll-component";
 
 // const fetchPosts = async (pageParam, searchParams) => {

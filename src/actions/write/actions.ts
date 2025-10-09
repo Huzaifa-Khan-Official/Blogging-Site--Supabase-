@@ -1,9 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getUserServer } from "../../utils/get-user-server";
-import { createClient } from "../../utils/supabase/server";
-import { slugify } from "../../utils/slugify";
+import { createClient } from "@/utils/supabase/server";
+import { slugify } from "@/utils/slugify";
 
 interface FormData {
   title: string;
@@ -12,54 +11,6 @@ interface FormData {
   content: string;
   img: string | null;
 }
-
-// export async function saveBlog(formData: FormData) {
-//   const supabase = await createClient();
-//   // const user = await getUserServer();
-
-//   // console.log("user in saveBlog =>", user);
-
-//   const baseSlug = formData.title.replace(/ /g, "-").toLowerCase();
-//   let slug = baseSlug;
-
-//   let { data: existingBlog, error: existingBlogError } = await supabase
-//     .from("Blogs")
-//     .select("*")
-//     .eq("slug", slug)
-//     .maybeSingle();
-
-//   let counter = 2;
-
-//   while (existingBlog) {
-//     slug = `${baseSlug}-${counter}`;
-//     const { data: nextBlog } = await supabase
-//       .from("Blogs")
-//       .select("*")
-//       .eq("slug", slug)
-//       .maybeSingle();
-//     existingBlog = nextBlog;
-//     counter++;
-//   }
-
-//   const data = {
-//     title: formData.title,
-//     category: formData.category,
-//     description: formData.desc,
-//     content: formData.content,
-//     slug,
-//     img: formData.img,
-//   };
-
-//   const { data: res, error } = await supabase.from("Blogs").insert([data]);
-
-//   if (error) {
-//     console.log("Error:", error.message);
-//     return { error: error.message };
-//   }
-
-//   // return { success: true };
-//   redirect(`/blog/${slug}`);
-// }
 
 export async function saveBlog(formData: FormData) {
   try {
