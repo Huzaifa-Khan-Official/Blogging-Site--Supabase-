@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { IoCamera } from "react-icons/io5";
-// import Image from "./Image";
-// import Upload from "./Upload";
 
 export function ProfileEditDialog({
   isOpen,
@@ -11,18 +9,11 @@ export function ProfileEditDialog({
   selectedImg,
   setSelectedImg,
 }) {
-  // const { updateProfile, isUpdatingProfile, authUser } = useAuthStore();
-//   const { user } = useUser();
   const [progress, setProgress] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [username, setUsername] = useState(null);
   const [title, setTitle] = useState(null);
-
-//   useEffect(() => {
-//     setUsername(authUser?.username);
-//     setTitle(authUser?.title);
-//   }, [authUser]);
 
   if (!isOpen) return null;
 

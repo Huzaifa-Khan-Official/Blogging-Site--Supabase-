@@ -5,11 +5,6 @@ import { useEffect, useState } from 'react';
 import CommentSkeleton from './skeletons/CommentSkeleton';
 import { getComments, addComment } from '@/actions/comment/actions';
 
-// const fetchComments = async (blogId: string) => {
-//     const res = await axiosInstance.get(`/comments/${blogId}`);
-//     return res.data;
-// }
-
 const Comments = ({ blogId }: { blogId: string }) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
@@ -34,40 +29,7 @@ const Comments = ({ blogId }: { blogId: string }) => {
         fetchComments();
     }, [])
 
-    // const { isPending, error, data } = useQuery({
-    //     queryKey: ['comments', postId],
-    //     queryFn: () => fetchComments(postId),
-    // });
-
-    // const queryClient = useQueryClient();
-
-    // const mutation = useMutation({
-    //     mutationFn: async (newComment) => {
-    //         try {
-    //             const response = await axiosInstance.post(`/comments/${postId}`, newComment);
-    //             return response.data;
-    //         } catch (error) {
-    //             throw error;
-    //         }
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['comments', postId],
-    //         });
-    //         if (textareaRef.current) {
-    //             textareaRef.current.value = '';
-    //         }
-    //     },
-    //     onError: (error) => {
-    //         toast.error(error.response.data.message);
-    //     }
-    // });
-
-    // if (isPending) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
-
     const onSubmit = async (data: any) => {
-        // mutation.mutate(data);
         const { success, error } = await addComment(blogId, data.description);
 
         if (error) {

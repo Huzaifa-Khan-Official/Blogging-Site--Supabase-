@@ -36,11 +36,10 @@ const RegisterPage = () => {
         "We have send you an email. Click the link to verify you account",
         {
           autoClose: 1500,
-          onClose: () => {
-            redirect("/login");
-          },
         },
       );
+
+      setTimeout(() => redirect("/login"), 1600);
       reset();
     }
 

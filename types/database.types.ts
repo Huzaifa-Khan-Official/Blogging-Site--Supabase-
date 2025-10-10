@@ -5,25 +5,29 @@ interface UserProfile {
   email: string;
   img?: string;
   role: string;
-  saved_posts: string[];
-  is_verified: boolean;
-  created_at: string;
-  updated_at: string;
+  saved_posts?: string[];
+  created_at?: string;
 }
 
 interface BlogPost {
-  id: string; //
-  user_id?: string; // todo
-  title: string; //
-  slug: string; //
-  category: string; //
-  description: string; //
-  content: string; //
-  img?: string; //
-  is_featured: boolean; //
-  visit: number; //
-  created_at: string; //
-  // profiles?: UserProfile; // Joined data
+  id: string; 
+  user_id: string; 
+  title: string; 
+  slug: string; 
+  category: string; 
+  description: string; 
+  content: string; 
+  img: string;
+  created_at: string;
+  is_featured: boolean;
+  author: {
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+    img: string;
+    title: string;
+  }
 }
 
 interface Comment {
@@ -32,5 +36,5 @@ interface Comment {
   blog_id: string;
   description: string;
   created_at: string;
-  profiles?: UserProfile; // Joined data
+  profiles?: UserProfile;
 }

@@ -3,9 +3,9 @@ import { format } from "timeago.js";
 import { HiDotsVertical } from "react-icons/hi";
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
-const BlogListItem = ({ blog }: {blog: BlogPost}) => {
-    // const { deletePost } = usePostStore();
+const BlogListItem = ({ blog }: { blog: BlogPost }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -17,23 +17,13 @@ const BlogListItem = ({ blog }: {blog: BlogPost}) => {
         setMenuOpen(false);
     };
 
-    // const handleDelete = () => {
-    //     deletePost(blog.id, () => { });
-    //     setMenuOpen(false);
-    // };
-
     return (
         <div className='relative flex flex-col mb-8 sm:flex-row gap-3'>
             {/* image */}
             {blog?.img && (
                 <div className='sm:w-1/2 xl:w-1/3'>
-                    {/* <Image
-                        src={post?.img}
-                        className='rounded-2xl object-cover aspect-video'
-                        w={540}
-                    /> */}
-
-                    <img src={blog?.img} alt={blog?.title} className='rounded-2xl object-cover aspect-video' />
+                    {/* <img src={blog?.img} alt={blog?.title} className='rounded-2xl object-cover aspect-video' /> */}
+                    <Image src={blog?.img} alt={blog?.title} width={540} height={300} className='rounded-2xl object-cover aspect-video' />
                 </div>
             )}
 
@@ -47,12 +37,12 @@ const BlogListItem = ({ blog }: {blog: BlogPost}) => {
                 {/* details */}
                 <div className='flex items-center gap-2 text-gray-400 text-sm flex-wrap'>
                     <span>Written by</span>
-                    {/* <Link
+                    <Link
                         className='text-blue-800'
-                        href={`/blogs?author=${blog?.user.username}`}
+                        href={`/blogs?author=${blog?.author?.username}`}
                     >
-                        {blog?.user.username}
-                    </Link> */}
+                        {blog?.author?.username}
+                    </Link>
                     <span>on</span>
                     <Link
                         className='text-blue-800'

@@ -1,6 +1,5 @@
 "use client"
 
-// import { useQuery } from '@tanstack/react-query'
 import { format } from 'timeago.js'
 import { toast } from 'react-toastify'
 import { useParams } from 'next/navigation';
@@ -52,9 +51,9 @@ const SinglePostPage = () => {
                     {/* details */}
                     <div className='flex items-center gap-2 text-gray-400 text-sm'>
                         <span>Written by</span>
-                        {/* <Link className='text-blue-800'> todo
-                            {data?.user?.username}
-                        </Link> */}
+                        <Link href={`/blogs?author=${data.author.username}`} className='text-blue-800'>
+                            {data.author.username}
+                        </Link>
                         <span>on</span>
                         <Link href={`/category/${data?.category}`} className='text-blue-800'>
                             {data?.category}
@@ -96,39 +95,47 @@ const SinglePostPage = () => {
 
                     {/* author details */}
                     <div className='flex flex-col gap-2'>
-                        <div className='flex items-center gap-6'>
-                            {/* {data.user.img ? <Image
-                                src={data.user.img}
+                        <div className='flex items-center gap-6 flex-wrap'>
+                            {data.author.img ? <Image
+                                src={data.author.img}
                                 className='w-12 h-12 rounded-full object-cover'
-                                w="48"
-                                h="48"
+                                width="48"
+                                height="48"
+                                alt={data.author.username}
                             /> :
                                 <Image
-                                    src="user.png"
+                                    src="/userIcon.jpg"
                                     className='w-12 h-12 rounded-full object-cover'
-                                    w="48"
-                                    h="48"
+                                    width="48"
+                                    height="48"
+                                    alt='User Icon'
                                 />
                             }
 
-                            <Link className='text-blue-800'>
-                                {data?.user?.username}
-                            </Link> */}
+                            <Link href={`/blogs?author=${data.author.username}`} className='text-blue-800'>
+                                {data.author.username}
+                            </Link>
                         </div>
 
-                        {/* <p className=' text-sm text-gray-500'>{data.user.title ? data.user.title : "Lorem ipsum, dolor sit amet consectetur adipisicing elit."}</p> */}
+                        <p className=' text-sm text-gray-500'>{data.author.title ? data.author.title : "Lorem ipsum, dolor sit amet consectetur adipisicing elit."}</p>
 
                         <div className='flex gap-2'>
-                            {/* <Link>
-                                <Image
-                                    src="facebook.svg"
-                                />
-                            </Link>
-                            <Link>
-                                <Image
-                                    src="instagram.svg"
-                                />
-                            </Link> */}
+                            {/* <Link> */}
+                            <Image
+                                src="/facebook.svg"
+                                alt='Facebook'
+                                width={24}
+                                height={24}
+                            />
+                            {/* </Link> */}
+                            {/* <Link> */}
+                            <Image
+                                src="/instagram.svg"
+                                alt='Instagram'
+                                width={24}
+                                height={24}
+                            />
+                            {/* </Link> */}
                         </div>
                     </div>
 

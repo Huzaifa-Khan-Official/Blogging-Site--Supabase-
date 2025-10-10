@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import Search from './Search';
+import Link from 'next/link';
 
 const MainCategories = () => {
     return (
@@ -8,37 +8,37 @@ const MainCategories = () => {
             {/* links */}
             <div className='flex-1 flex items-center gap-1 flex-wrap'>
                 <Link
-                    to="/blogs"
+                    href="/blogs"
                     className="bg-blue-800 text-white rounded-full px-4 py-2"
                 >
                     All Posts
                 </Link>
                 <Link
-                    to="/blogs?cat=web-design"
+                    href="/blogs?cat=web-design"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Web Design
                 </Link>
                 <Link
-                    to="/blogs?cat=development"
+                    href="/blogs?cat=development"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Development
                 </Link>
                 <Link
-                    to="/blogs?cat=databases"
+                    href="/blogs?cat=databases"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Databases
                 </Link>
                 <Link
-                    to="/blogs?cat=seo"
+                    href="/blogs?cat=seo"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Search Engines
                 </Link>
                 <Link
-                    to="/blogs?cat=marketing"
+                    href="/blogs?cat=marketing"
                     className="hover:bg-blue-100 rounded-full px-4 py-2"
                 >
                     Marketing

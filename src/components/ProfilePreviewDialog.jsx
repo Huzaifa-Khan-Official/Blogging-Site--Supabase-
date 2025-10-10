@@ -1,5 +1,4 @@
 import React from 'react';
-// import Image from './Image';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -13,7 +12,6 @@ export function ProfilePreviewDialog({ isOpen, onClose, user, onUpdateProfile, o
           <div className="w-20 h-20 rounded-full overflow-hidden">
             <Image
               src={"/userIcon.jpg"}
-              // alt={user?.username}
               alt="User Icon"
               className="w-full h-full object-cover"
               width={200}

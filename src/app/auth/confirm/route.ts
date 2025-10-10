@@ -23,6 +23,5 @@ export async function GET(request: NextRequest) {
     console.log("error ==>", error.message);
   }
 
-  // redirect the user to an error page with some instructions
   redirect("/error");
 }

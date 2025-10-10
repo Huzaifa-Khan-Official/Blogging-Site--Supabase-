@@ -9,7 +9,8 @@ import { toast } from "react-toastify";
 import { login } from "@/actions/login/actions";
 
 const LoginPage = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -22,15 +23,18 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (data: any) => {
+    setIsLoggingIn(true);
     const result = await login(data);
 
     if (result?.error) {
       toast.error(result.error)
+      setIsLoggingIn(false);
     } else {
       toast.success("Logged in successfully", {
         autoClose: 1500,
         onClose: () => {
           reset();
+          setIsLoggingIn(false);
           location.href = "/";
         },
       });
@@ -125,7 +129,7 @@ const LoginPage = () => {
               type="submit"
             >
               <span>Continue</span>
-              {/* TODO {isLoggingIn ? (
+              {isLoggingIn ? (
                 <div role="status">
                   <svg
                     aria-hidden="true"
@@ -146,7 +150,7 @@ const LoginPage = () => {
                 </div>
               ) : (
                 <span className="ml-2">→</span>
-              )} */}
+              )}
             </button>
           </form>
 
@@ -160,7 +164,7 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Social Login Buttons */}
+          {/* Social Login Buttons TODO */}
           <div className="flex items-center gap-3 mb-2">
             {/* Google Button */}
             <button

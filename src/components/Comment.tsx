@@ -13,38 +13,6 @@ import { deleteComment } from '@/actions/comment/actions';
 
 const Comment = ({ comment, blogId }: { comment: Comment, blogId: string }) => {
     const [isDeleting, setIsDeleting] = useState(false);
-    // const { authUser } = useAuthStore();
-
-    // const role = authUser?.role || false;
-
-    // const queryClient = useQueryClient();
-
-    // const mutation = useMutation({
-    //     mutationFn: async () => {
-    //         try {
-    //             const response = await axiosInstance.delete(`/comments/${comment._id}`);
-    //             return response.data;
-    //         } catch (error) {
-    //             throw error;
-    //         }
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['comments', postId],
-    //         });
-    //         toast.success("Comment deleted successfully", {
-    //             autoClose: 1500,
-    //         });
-    //         if (textareaRef.current) {
-    //             textareaRef.current.value = '';
-    //         }
-    //     },
-    //     onError: (error) => {
-    //         toast.error(error.response.data.message, {
-    //             autoClose: 1500,
-    //         });
-    //     }
-    // });
 
     const handleDelete = async (commentId: string) => {
         setIsDeleting(true);
@@ -75,13 +43,13 @@ const Comment = ({ comment, blogId }: { comment: Comment, blogId: string }) => {
                 {/* { todo
                     authUser && ((comment.user.username === authUser.username || comment.user.username === authUser.email) || role === "admin") &&
                     <span className='text-sm text-red-300 hover:text-red-500 cursor-pointer' onClick={() => mutation.mutate()}>
-                        Delete
+                        Update
                         {
                             mutation.isPending && <span className='ml-2 text-red-300'>...</span>
                         }
                     </span>
                 } */}
-                
+
                 <DropdownMenu>
                     <DropdownMenuTrigger className='cursor-pointer'><BsThreeDotsVertical /></DropdownMenuTrigger>
                     <DropdownMenuContent>

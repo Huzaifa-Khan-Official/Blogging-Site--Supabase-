@@ -1,26 +1,37 @@
-// contexts/AuthContext.tsx
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { User } from '@supabase/supabase-js'
 import { createClient } from '@/utils/supabase/client'
+import { getProfile } from '@/actions/login/actions'
 
 interface AuthContextType {
-    user: User | null
+    user: UserProfile | null
     isLoading: boolean
 }
 
 const AuthContext = createContext<AuthContextType>({ user: null, isLoading: true })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useState<UserProfile | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const supabase = createClient()
 
     useEffect(() => {
         const getSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession()
-            setUser(session?.user ?? null)
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                setUser(null)
+                setIsLoading(false)
+                return
+            }
+
+            const profileData = await getProfile();
+            if (profileData) {
+                setUser(profileData)
+            } else {
+                setUser(null)
+            }
             setIsLoading(false)
         }
 
@@ -28,7 +39,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
-                setUser(session?.user ?? null)
+                if (!session) {
+                    setUser(null)
+                    setIsLoading(false)
+                    return
+                }
+
+                const profileData = await getProfile();
+                if (profileData) {
+                    setUser(profileData)
+                } else {
+                    setUser(null)
+                }
                 setIsLoading(false)
             }
         )
