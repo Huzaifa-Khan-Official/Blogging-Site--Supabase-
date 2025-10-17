@@ -16,11 +16,11 @@ const PostListPage = () => {
         const sort = searchParams.get('sort');
 
         if (search) {
-            setTitle(`Search Results for "${search}" Blog`);
+            setTitle(`Search Results for "${search}"`);
         } else if (category) {
-            setTitle(`"${category.replace(/-/g, " ")}" Category Blog's`);
+            setTitle(`"${category.replace(/-/g, " ")}" Category Blogs`);
         } else if (sort) {
-            setTitle(`"${sort.replace(/-/g, " ")}" Blog's`);
+            setTitle(`"${sort.replace(/-/g, " ")}" Blogs`);
         } else {
             setTitle('All Posts');
         }
@@ -29,8 +29,8 @@ const PostListPage = () => {
     return (
         <div>
             <h1 className='mt-5 mb-8 text-2xl capitalize'>{title}</h1>
-            <button 
-                onClick={() => setOpen(!open)} 
+            <button
+                onClick={() => setOpen(!open)}
                 className='bg-blue-800 text-sm text-white px-4 py-2 rounded-2xl mb-4 md:hidden'
             >
                 {open ? "Close" : "Filter or Search"}

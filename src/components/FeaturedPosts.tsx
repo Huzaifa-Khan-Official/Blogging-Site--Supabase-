@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { format } from "timeago.js"
 import { FeaturedPostsSkeleton } from './skeletons/FeaturedPostsSkeleton';
+import BlogLink from './BlogLink';
 
 const FeaturedPosts = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,12 +64,9 @@ const FeaturedPosts = () => {
             <span className="text-muted-foreground">{format(first.created_at)}</span>
           </div>
 
-          <Link
-            href={`/blog/${first.slug}`}
-            className="line-clamp-2 text-2xl font-bold leading-snug transition-colors hover:text-blue-700 md:text-3xl"
-          >
+          <BlogLink slug={first.slug} className="line-clamp-2 text-2xl font-bold leading-snug transition-colors hover:text-blue-700 md:text-3xl">
             {first.title}
-          </Link>
+          </BlogLink>
         </article>
 
         {/* Right: Stacked compact cards */}
@@ -102,12 +100,9 @@ const FeaturedPosts = () => {
                   <span className="text-muted-foreground">{format(blog.created_at)}</span>
                 </div>
 
-                <Link
-                  href={`/blog/${blog.slug}`}
-                  className="line-clamp-2 text-lg font-semibold leading-snug transition-colors group-hover:text-blue-700"
-                >
+                <BlogLink slug={blog.slug} className="line-clamp-2 text-lg font-semibold leading-snug transition-colors group-hover:text-blue-700">
                   {blog.title}
-                </Link>
+                </BlogLink>
               </div>
             </article>
           ))}

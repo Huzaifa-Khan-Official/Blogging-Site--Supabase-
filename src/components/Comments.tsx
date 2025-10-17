@@ -3,11 +3,15 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import CommentSkeleton from './skeletons/CommentSkeleton';
-import { getComments, addComment } from '@/actions/comment/actions';
+import { getComments, addComment, deleteComment } from '@/actions/comment/actions';
+import { createClient } from '@/utils/supabase/client';
+import { useAuth } from '@/context/AuthContext';
 
 const Comments = ({ blogId }: { blogId: string }) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
+    const [isDeleting, setIsDeleting] = useState(false);
     const {
         register,
         handleSubmit,
@@ -16,20 +20,69 @@ const Comments = ({ blogId }: { blogId: string }) => {
     } = useForm();
 
     useEffect(() => {
-        const fetchComments = async () => {
-            setLoading(true);
-            const { data, error } = await getComments(blogId);
-
-            if (data) {
-                setComments(data);
-                setLoading(false);
-            }
-        }
-
         fetchComments();
-    }, [])
+    }, [blogId]);
+
+    useEffect(() => {
+        const supabase = createClient();
+
+        const channel = supabase.channel(`comments-${blogId}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'Comments',
+                    filter: `blog_id=eq.${blogId}`
+                },
+                (payload) => {
+                    setComments(prev => [...prev, payload.new as Comment]);
+                }
+            )
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'Comments',
+                    filter: `blog_id=eq.${blogId}`
+                },
+                (payload) => {
+                    setComments(prev => prev.map(comment =>
+                        comment.id === payload.new.id ? payload.new as Comment : comment
+                    ));
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [blogId]);
+
+    const fetchComments = async () => {
+        setLoading(true);
+        const { data, error } = await getComments(blogId);
+
+        if (data) {
+            setComments(data);
+        }
+        setLoading(false);
+    }
+
+    const fetchUpdatedComments = async () => {
+        const { data, error } = await getComments(blogId);
+
+        if (data) {
+            setComments(data);
+        }
+    }
 
     const onSubmit = async (data: any) => {
+        if (!user) {
+            toast.error("You must be logged in to comment");
+            return;
+        }
         const { success, error } = await addComment(blogId, data.description);
 
         if (error) {
@@ -41,6 +94,21 @@ const Comments = ({ blogId }: { blogId: string }) => {
             reset();
         }
     }
+
+    const handleDelete = async (commentId: string) => {
+        setIsDeleting(true);
+        const { success, error } = await deleteComment(commentId);
+
+        if (error) {
+            toast.error(error);
+        } else if (success) {
+            toast.success("Comment deleted successfully");
+            setComments(prev => prev.filter(comment => comment.id !== commentId));
+            fetchUpdatedComments();
+        }
+        setIsDeleting(false);
+    }
+
     return (
         <div className='flex flex-col gap-6 lg:w-3/5'>
             <h1 className='text-xl text-gray-500 underline'>Comments</h1>
@@ -53,57 +121,30 @@ const Comments = ({ blogId }: { blogId: string }) => {
                             value: true,
                             message: "Comment is required",
                         },
-                    })} placeholder='Write a comment...' className='w-full p-4 rounded-xl bg-gray-50'
+                    })}
+                    placeholder='Write a comment...'
+                    className='w-full p-4 rounded-xl bg-gray-50'
                 />
-                <button type='submit' className='bg-blue-800 px-4 py-3 text-white font-medium rounded-xl'>Send</button>
+                <button type='submit' className='bg-blue-800 px-4 py-3 text-white font-medium rounded-xl cursor-pointer'>
+                    Send
+                </button>
             </form>
             {errors.description && errors.description?.message && (
                 <p className="text-red-500">{String(errors.description.message)}</p>
             )}
 
-            {/* single comment */}
-            {/* {isPending ? (
-                "Loading..."
-            ) : error ? (
-                "Error Loading comments"
-            ) : (
-                <>
-                    {
-                        mutation.isPending && (
-                            <Comment
-                                comment={{
-                                    desc: `${mutation.variables.desc} (Sending...)`,
-                                    createdAt: new Date(),
-                                    user: {
-                                        img: authUser.imageUrl,
-                                        username: authUser.username
-                                    }
-                                }}
-                            />
-                        )
-                    }
+            {/* Comments list */}
+            {loading && [...Array(3)].map((_, i) => (
+                <CommentSkeleton key={i} />
+            ))}
 
-                    {
-                        data.map(comment => (
-                            <Comment key={comment._id} comment={comment} blogId={blogId} />
-                        ))
-                    }
-                </>
-            )
-            } */}
+            {!loading && comments.length === 0 && (
+                <p className='text-gray-500'>No comments yet</p>
+            )}
 
-            {
-                loading && [...Array(3)].map((_, i) => (
-                    <CommentSkeleton key={i} />
-                ))
-            }
-            {
-                comments.length === 0 ? (
-                    <p className='text-gray-500'>No comments yet</p>
-                ) : comments.map(comment => (
-                    <Comment key={comment.id} comment={comment} blogId={blogId} />
-                ))
-            }
+            {!loading && comments.map(comment => (
+                <Comment key={comment.id} comment={comment} isDeleting={isDeleting} handleDelete={handleDelete} />
+            ))}
         </div>
     )
 }

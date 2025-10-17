@@ -1,33 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import { deleteBlog, featureBlog } from '@/actions/write/actions';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/context/AuthContext';
+import { checkIsBlogSaved, saveBlog } from '@/actions/blogs/actions';
 
 const PostMenuActions = ({ blog }: { blog: BlogPost }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [isFeaturedLoading, setIsFeaturedLoading] = useState(false);
   const [isFeatured, setIsFeatured] = useState(blog.is_featured);
   const { user: authUser } = useAuth();
   const isAdmin = authUser?.role === 'admin';
   const isOwner = authUser?.id === blog.author.id;
   const canEdit = isAdmin || isOwner;
-  // const { savePost, isSaveMutating } = usePostStore();
-  // const { isPending, error, data: savedPosts } = useQuery({
-  //   queryKey: ['savedPosts'],
-  //   queryFn: async () => {
-  //     const response = await axiosInstance.get("/users/saved");
-  //     return response.data;
-  //   },
-  //   enabled: !!authUser,
-  // });
 
-  // const isSaved = authUser ? savedPosts?.blogs?.some((p) => p._id === post._id) : false;
+  useEffect(() => {
+    async function isBlogSaved() {
+      const { isSaved } = await checkIsBlogSaved(blog.id!);
+      setIsSaved(isSaved);
+    }
 
-  // const handleSave = () => {
-  //   if (!authUser) return navigate("/login");
-  //   savePost(post._id, queryClient);
-  // };
+    isBlogSaved();
+  }, [blog])
 
   const handleFeature = async () => {
     setIsFeaturedLoading(true);
@@ -50,6 +46,7 @@ const PostMenuActions = ({ blog }: { blog: BlogPost }) => {
 
     setIsFeaturedLoading(false);
   }
+
   const handleDelete = async () => {
     setIsDeleting(true);
     const { success, error } = await deleteBlog(blog.id!);
@@ -59,20 +56,32 @@ const PostMenuActions = ({ blog }: { blog: BlogPost }) => {
     } else if (success) {
       toast.success("Blog deleted successfully", {
         autoClose: 1500,
-        onClose: () => {
-          redirect("/");
-        }
       });
+
+      setTimeout(() => redirect("/"), 1600);
     }
     setIsDeleting(false);
   }
-  
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    const { success, message } = await saveBlog(blog.id!);
+
+    if (success === false) {
+      toast.error(message);
+    } else if (success) {
+      toast.success(message);
+      setIsSaved(!isSaved);
+    }
+    setIsSaving(false);
+  }
+
   return (
     <div>
       <h1 className='mt-4 mb-2 text-sm'>Actions</h1>
 
       {/* Save Post Btn */}
-      <div className='flex items-center gap-2 py-2 text-sm cursor-pointer'>
+      <div className='flex items-center gap-2 py-2 text-sm cursor-pointer' onClick={handleSave} >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 48 48"
@@ -83,11 +92,11 @@ const PostMenuActions = ({ blog }: { blog: BlogPost }) => {
             d="M12 4C10.3 4 9 5.3 9 7v34l15-9 15 9V7c0-1.7-1.3-3-3-3H12z"
             stroke="black"
             strokeWidth="2"
-          // fill={isSaveMutating ? (isSaved ? "none" : "black") : (isSaved ? "black" : "none")}
+            fill={isSaving ? (isSaved ? "none" : "black") : (isSaved ? "black" : "none")}
           />
         </svg>
         <span>Save this post</span>
-        {/* {isSaveMutating && <span className='text-sm'>Saving...</span>} */}
+        {isSaving && <span className='text-sm'>Saving...</span>}
       </div>
 
       {/* Feature Post Btn */}

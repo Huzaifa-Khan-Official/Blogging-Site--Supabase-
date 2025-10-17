@@ -7,6 +7,7 @@ interface UserProfile {
   role: string;
   saved_posts?: string[];
   created_at?: string;
+  user_metadata?: any;
 }
 
 interface BlogPost {
@@ -36,5 +37,5 @@ interface Comment {
   blog_id: string;
   description: string;
   created_at: string;
-  profiles?: UserProfile;
+  author?: UserProfile;
 }

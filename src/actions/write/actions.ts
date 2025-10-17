@@ -77,19 +77,80 @@ export async function saveBlog(formData: FormData) {
   redirect(`/blog/${data.slug}`);
 }
 
-export async function getBlogs() {
+export async function getBlogs(search?: string | null, category?: string | null, sort?: string | null) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("Blogs")
     .select(`
       *,
       UserProfile (*)
-    `)
-    .order('created_at', { ascending: false });
+    `);
+
+  if (search) {
+    query = query.or(`
+      title.ilike.%${search}%,
+      description.ilike.%${search}%,
+      content.ilike.%${search}%,
+      category.ilike.%${search}%,
+      UserProfile.username.ilike.%${search}%
+    `);
+  }
+
+  if (category && category !== 'all') {
+    const formattedCategory = category.replace(/-/g, " ");
+    query = query.eq('category', formattedCategory);
+  }
+
+  if (sort) {
+    const formattedSort = sort.toLowerCase().replace(/-/g, "_");
+
+    switch (formattedSort) {
+      case 'most_viewed':
+      case 'most_visited':
+      case 'popular':
+      case 'trending':
+        query = query.order('visit', { ascending: false }).order('title', { ascending: true });
+        break;
+
+      case 'newest':
+      case 'most_recent':
+        query = query.order('created_at', { ascending: false });
+        break;
+
+      case 'oldest':
+        query = query.order('created_at', { ascending: true });
+        break;
+
+      case 'featured':
+        query = query.eq('is_featured', true).order('created_at', { ascending: false });
+        break;
+
+      case 'a_z':
+        query = query.order('title', { ascending: true });
+        break;
+
+      case 'z_a':
+        query = query.order('title', { ascending: false });
+        break;
+
+      default:
+        query = query.order('created_at', { ascending: false });
+    }
+  } else {
+    query = query.order('created_at', { ascending: false });
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     return { error: error.message };
+  }
+
+  if (sort && (sort.includes('popular') || sort.includes('trending'))) {
+    data?.forEach(blog => {
+      console.log(`- ${blog.title}: ${blog.visit} visits`);
+    });
   }
 
   const formattedData = data?.map(blog => ({
@@ -258,10 +319,48 @@ export async function deleteFile(url: string) {
 
 export async function deleteBlog(id: string) {
   const supabase = await createClient();
+  console.log("id ==>", id);
   const { error } = await supabase.from("Blogs").delete().eq("id", id);
   if (error) {
     console.log("Error in deleteBlog:", error.message);
     return { error: error.message };
   }
   return { success: true };
+}
+
+export async function incrementBlogVisits(slug: string) {
+  if (!slug) {
+    return { success: false, message: 'Slug is required' }
+  }
+
+  const supabase = await createClient();
+
+  const { data: blog, error: fetchError } = await supabase
+    .from('Blogs')
+    .select('visit')
+    .eq('slug', slug)
+    .single()
+
+  if (fetchError) {
+    console.error('Error fetching blog:', fetchError)
+    return { success: false, message: fetchError.message }
+  }
+
+  if (!blog) {
+    return { success: false, message: 'Blog not found' }
+  }
+
+  const { error: updateError } = await supabase
+    .from('Blogs')
+    .update({
+      visit: blog.visit + 1,
+    })
+    .eq('slug', slug)
+
+  if (updateError) {
+    console.error('Error updating blog visits:', updateError)
+    return { success: false, message: updateError.message }
+  }
+
+  return { success: true }
 }

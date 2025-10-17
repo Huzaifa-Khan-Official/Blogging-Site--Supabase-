@@ -27,7 +27,7 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { session } } = await supabase.auth.getSession()
 
-  const protectedRoutes = ['/write', '/create', '/profile', "/saved-blogs"]
+  const protectedRoutes = ['/write', '/create', '/profile', "/saved-blogs", "/my-blogs"]
   const isProtectedRoute = protectedRoutes.some(route =>
     request.nextUrl.pathname.startsWith(route)
   )

@@ -12,7 +12,6 @@ const IntroductionSection = () => {
 
             {/* animated button */}
             <Link
-                // href={`${!user ? "/login" : "write"}`} todo
                 href="/write"
                 className='hidden md:block relative cursor-pointer'
             >

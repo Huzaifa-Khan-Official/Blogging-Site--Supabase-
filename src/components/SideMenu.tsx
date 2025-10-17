@@ -22,6 +22,14 @@ const filterItems = [
         value: "oldest",
         label: "Oldest"
     },
+    {
+        value: 'a-z',
+        label: 'A-Z'
+    },
+    {
+        value: 'z-a',
+        label: 'Z-A'
+    }
 ];
 
 const categoryItems = [
@@ -81,7 +89,7 @@ const SideMenu = () => {
             <h1 className='mt-6 mb-4 text-sm font-medium'>Filter</h1>
             <div className='flex flex-col gap-2 text-sm'>
                 {filterItems.map(item => (
-                    <label key={item.value} className='flex items-center gap-2 cursor-pointer'>
+                    <label key={item.value} className={`flex items-center gap-2 cursor-pointer hover:text-blue-600 hover:underline ${currentSort === item.value ? 'text-blue-600 font-medium underline' : ''}`}>
                         <input
                             type="radio"
                             name='sort'
@@ -106,7 +114,7 @@ const SideMenu = () => {
                 {categoryItems.map(item => (
                     <span
                         key={item.value}
-                        className={`underline cursor-pointer ${currentCategory === item.value ? 'text-blue-600 font-medium' : ''}`}
+                        className={`cursor-pointer hover:underline hover:text-blue-600 ${currentCategory === item.value ? 'text-blue-600 font-medium' : ''}`}
                         onClick={() => handleCategoryChange(item.value)}
                     >
                         {item.label}

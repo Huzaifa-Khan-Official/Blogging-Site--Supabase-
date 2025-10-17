@@ -73,7 +73,7 @@ const Navbar = () => {
               </div>
             ))}
             <Link href="/write" onClick={() => setOpen(false)}>
-              <button className="py-2 px-4 rounded-3xl bg-blue-800 hover:bg-blue-600 text-white">
+              <button className="py-2 px-4 rounded-3xl bg-blue-800 hover:bg-blue-600 text-white cursor-pointer">
                 Write Blog
               </button>
             </Link>
@@ -120,15 +120,14 @@ const Navbar = () => {
           ))}
 
           <Link href="/write">
-            <button className="py-2 px-4 rounded-3xl bg-blue-800 hover:bg-blue-600 text-white">
+            <button className="py-2 px-4 rounded-3xl bg-blue-800 hover:bg-blue-600 text-white cursor-pointer">
               Write Blog
             </button>
           </Link>
 
           {isLoading ? (
             <div className="hidden md:flex items-center gap-4 font-medium">
-              <div className="animate-pulse bg-gray-300 h-6 w-12 rounded"></div>
-              <div className="animate-pulse bg-gray-300 h-10 w-16 rounded-3xl"></div>
+              <div className="animate-pulse bg-gray-300 h-10 w-10 rounded-full"></div>
             </div>
           ) : !user ? (
             <Link href="/login">
@@ -150,12 +149,6 @@ const Navbar = () => {
                   className="rounded-full w-full h-full"
                 />
               </div>
-              <button
-                onClick={logout}
-                className="py-2 px-4 rounded-3xl bg-red-600 hover:bg-red-500 text-white cursor-pointer"
-              >
-                Logout
-              </button>
             </div>
           )}
         </div>
