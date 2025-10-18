@@ -1,9 +1,9 @@
-import React from 'react';
-import { UseFormRegister, FieldErrors } from 'react-hook-form';
+import type React from "react"
+import type { UseFormRegister, FieldErrors } from "react-hook-form"
 
 interface CategorySelectProps {
-    register: UseFormRegister<any>;
-    errors: FieldErrors;
+    register: UseFormRegister<any>
+    errors: FieldErrors
 }
 
 const CategorySelect: React.FC<CategorySelectProps> = ({ register, errors }) => {
@@ -18,7 +18,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ register, errors }) => 
                         required: {
                             value: true,
                             message: "Category is required",
-                        }
+                        },
                     })}
                     className="p-2 rounded-xl bg-white shadow-md"
                 >
@@ -30,11 +30,9 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ register, errors }) => 
                     <option value="marketing">Marketing</option>
                 </select>
             </div>
-            {errors.category && errors.category?.message && (
-                <p className="text-red-500">{String(errors.category.message)}</p>
-            )}
+            {errors.category && errors.category?.message && <p className="text-red-500">{String(errors.category.message)}</p>}
         </>
-    );
-};
+    )
+}
 
-export default CategorySelect;
+export default CategorySelect

@@ -77,7 +77,9 @@ const BlogListItem = ({ blog }: { blog: BlogPost }) => {
                     <DropdownMenu>
                         <DropdownMenuTrigger className='cursor-pointer'><BsThreeDotsVertical /></DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
-                            <DropdownMenuItem className='cursor-pointer'>Update</DropdownMenuItem>
+                            <DropdownMenuItem className='cursor-pointer'>
+                                <Link href={`/write/${blog.slug}`} className='w-full'>Edit</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => handleDelete(blog.id)} className='cursor-pointer'>
                                 <span className='text-sm text-red-500 hover:text-red-400'>

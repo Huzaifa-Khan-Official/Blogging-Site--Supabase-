@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 export async function addComment(blogId: string, description: string) {
     const supabase = await createClient();
     const user = await getUserServer();
-    const { error } = await supabase.from("Comments").insert({ blog_id: blogId, description, id: user?.id });
+    const { error } = await supabase.from("Comments").insert({ blog_id: blogId, description, user_id: user?.id });
 
     if (error) {
         console.log("Error in addComment:", error.message);
@@ -20,7 +20,7 @@ export async function getComments(blogId: string) {
     const supabase = await createClient();
     const { data, error } = await supabase.from("Comments").select(`
     *,
-    author:UserProfile (
+    author:user_id (
       id,
       username,
       email, 
@@ -29,6 +29,8 @@ export async function getComments(blogId: string) {
       role
     )
   `).eq("blog_id", blogId);
+
+    console.log("data", data)
 
     if (error) {
         console.log("Error in getComments:", error.message);
@@ -48,4 +50,38 @@ export async function deleteComment(commentId: string) {
     }
 
     return { success: true };
+}
+
+export async function updateComment(commentId: string, content: string, userId: string) {
+
+    const supabase = await createClient();
+    const user = await getUserServer();
+
+    // Verify the user owns this comment
+    const { data: comment, error: fetchError } = await supabase
+        .from("Comments")
+        .select()
+        .eq("id", commentId)
+        .eq("user_id", user?.id)
+        .single()
+
+    console.log("comment", comment)
+
+    if (fetchError || !comment || comment.user_id !== userId) {
+        return { data: null, error: "Unauthorized to update this comment" }
+    }
+
+    const { data, error } = await supabase
+        .from("Comments")
+        .update({
+            description: content,
+        })
+        .eq("id", commentId)
+        .eq("user_id", user?.id)
+        .select()
+
+    if (error) {
+        return { data: null, error: error.message }
+    }
+    return { data, error: null }
 }

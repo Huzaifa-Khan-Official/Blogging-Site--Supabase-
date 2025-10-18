@@ -1,9 +1,9 @@
-import React from 'react';
-import { UseFormRegister, FieldErrors } from 'react-hook-form';
+import type React from "react"
+import type { UseFormRegister, FieldErrors } from "react-hook-form"
 
 interface TitleInputProps {
-    register: UseFormRegister<any>;
-    errors: FieldErrors;
+    register: UseFormRegister<any>
+    errors: FieldErrors
 }
 
 const TitleInput: React.FC<TitleInputProps> = ({ register, errors }) => {
@@ -20,11 +20,9 @@ const TitleInput: React.FC<TitleInputProps> = ({ register, errors }) => {
                     },
                 })}
             />
-            {errors.title && errors.title?.message && (
-                <p className="text-red-500">{String(errors.title.message)}</p>
-            )}
+            {errors.title && errors.title?.message && <p className="text-red-500">{String(errors.title.message)}</p>}
         </>
-    );
-};
+    )
+}
 
-export default TitleInput;
+export default TitleInput

@@ -1,156 +1,160 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
-import { toast } from 'react-toastify';
-import { uploadFile, deleteFile } from '@/actions/write/actions';
+import type React from "react"
+import { useState, useEffect, useRef } from "react"
+import dynamic from "next/dynamic"
+import { toast } from "react-toastify"
+import { uploadFile, deleteFile } from "@/actions/write/actions"
 
-const ReactQuill = dynamic(() => import('react-quill-new'), {
+const ReactQuill = dynamic(() => import("react-quill-new"), {
     ssr: false,
     loading: () => (
         <div className="flex-1 rounded-xl bg-gray-100 min-h-60 flex items-center justify-center">
             <p>Editor loading...</p>
         </div>
-    )
-});
+    ),
+})
 
 import 'react-quill-new/dist/quill.snow.css';
 
 interface UploadedFile {
-    url: string;
-    fileName: string;
-    type: 'image' | 'video';
+    url: string
+    fileName: string
+    type: "image" | "video"
 }
 
 interface EditorSectionProps {
-    content: string;
-    onContentChange: (content: string) => void;
+    content: string
+    onContentChange: (content: string) => void
 }
 
-const EditorSection: React.FC<EditorSectionProps> = ({
-    content,
-    onContentChange
-}) => {
-    const [isMounted, setIsMounted] = useState(false);
-    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-    const [progress, setProgress] = useState(0);
-    const imageInputRef = useRef<HTMLInputElement>(null);
-    const videoInputRef = useRef<HTMLInputElement>(null);
+const EditorSection: React.FC<EditorSectionProps> = ({ content, onContentChange }) => {
+    const [isMounted, setIsMounted] = useState(false)
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+    const [progress, setProgress] = useState(0)
+    const imageInputRef = useRef<HTMLInputElement>(null)
+    const videoInputRef = useRef<HTMLInputElement>(null)
 
     const FILE_LIMITS = {
         image: 5 * 1024 * 1024, // 5MB
-        video: 20 * 1024 * 1024 // 20MB
-    };
+        video: 20 * 1024 * 1024, // 20MB
+    }
 
     useEffect(() => {
-        setIsMounted(true);
-    }, []);
+        setIsMounted(true)
+    }, [])
 
-    const handleFileUpload = async (file: File, type: 'image' | 'video') => {
-        if (type === 'image' && file.size > FILE_LIMITS.image) {
-            toast.error(`Image size should be less than 5MB`);
-            return null;
+    const handleFileUpload = async (file: File, type: "image" | "video") => {
+        if (type === "image" && file.size > FILE_LIMITS.image) {
+            toast.error(`Image size should be less than 5MB`)
+            return null
         }
 
-        if (type === 'video' && file.size > FILE_LIMITS.video) {
-            toast.error(`Video size should be less than 20MB`);
-            return null;
+        if (type === "video" && file.size > FILE_LIMITS.video) {
+            toast.error(`Video size should be less than 20MB`)
+            return null
         }
 
-        if (type === 'image' && !file.type.startsWith('image/')) {
-            toast.error('Please select a valid image file');
-            return null;
+        if (type === "image" && !file.type.startsWith("image/")) {
+            toast.error("Please select a valid image file")
+            return null
         }
 
-        if (type === 'video' && !file.type.startsWith('video/')) {
-            toast.error('Please select a valid video file');
-            return null;
+        if (type === "video" && !file.type.startsWith("video/")) {
+            toast.error("Please select a valid video file")
+            return null
         }
 
         try {
-            setProgress(10);
-            const fileUrl = await uploadFile(file);
-            setProgress(100);
+            setProgress(10)
+            const fileUrl = await uploadFile(file)
+            setProgress(100)
 
             if (fileUrl) {
                 const uploadedFile: UploadedFile = {
                     url: fileUrl,
                     fileName: file.name,
-                    type: type
-                };
+                    type: type,
+                }
 
-                setUploadedFiles(prev => [...prev, uploadedFile]);
+                setUploadedFiles((prev) => [...prev, uploadedFile])
 
-                if (type === 'image') {
-                    onContentChange(content + `<div class="uploaded-image-container" data-file-name="${file.name}">
+                if (type === "image") {
+                    onContentChange(
+                        content +
+                        `<div class="uploaded-image-container" data-file-name="${file.name}">
             <img src="${fileUrl}" alt="${file.name}" style="max-width: 500px; max-height: 500px; border-radius: 8px;" />           
-          </div>`);
+          </div>`,
+                    )
                 } else {
-                    onContentChange(content + `<div class="uploaded-video-container" data-file-name="${file.name}">
+                    onContentChange(
+                        content +
+                        `<div class="uploaded-video-container" data-file-name="${file.name}">
             <video controls style="max-width: 100%; border-radius: 8px;">
               <source src="${fileUrl}" type="${file.type}">
               Your browser does not support the video tag.
             </video>
-          </div>`);
+          </div>`,
+                    )
                 }
 
-                toast.success(`${type === 'image' ? 'Image' : 'Video'} uploaded successfully!`);
-                return fileUrl;
+                toast.success(`${type === "image" ? "Image" : "Video"} uploaded successfully!`)
+                return fileUrl
             }
         } catch (error) {
-            toast.error(`Failed to upload ${type}`);
-            console.error(`Upload error:`, error);
+            toast.error(`Failed to upload ${type}`)
+            console.error(`Upload error:`, error)
         } finally {
-            setTimeout(() => setProgress(0), 1000);
+            setTimeout(() => setProgress(0), 1000)
         }
-        return null;
-    };
+        return null
+    }
 
-    const handleDeleteFile = async (fileUrl: string, fileName: string, type: 'image' | 'video') => {
+    const handleDeleteFile = async (fileUrl: string, fileName: string, type: "image" | "video") => {
         try {
-            setUploadedFiles(prev => prev.filter(file => file.url !== fileUrl));
+            setUploadedFiles((prev) => prev.filter((file) => file.url !== fileUrl))
 
-            const fileElementClass = type === 'image' ? 'uploaded-image-container' : 'uploaded-video-container';
-            const regex = new RegExp(`<div class="${fileElementClass}" data-file-name="${fileName}"[\\s\\S]*?<\\/div>`, 'g');
-            onContentChange(content.replace(regex, ''));
+            const fileElementClass = type === "image" ? "uploaded-image-container" : "uploaded-video-container"
+            const regex = new RegExp(`<div class="${fileElementClass}" data-file-name="${fileName}"[\\s\\S]*?<\\/div>`, "g")
+            onContentChange(content.replace(regex, ""))
 
-            await deleteFile(fileUrl);
+            await deleteFile(fileUrl)
 
-            toast.success(`${type === 'image' ? 'Image' : 'Video'} deleted successfully!`);
+            toast.success(`${type === "image" ? "Image" : "Video"} deleted successfully!`)
         } catch (error) {
-            toast.error(`Failed to delete ${type}`);
-            console.error(`Delete error:`, error);
+            toast.error(`Failed to delete ${type}`)
+            console.error(`Delete error:`, error)
         }
-    };
+    }
 
     const handleImageUpload = () => {
-        imageInputRef.current?.click();
-    };
+        imageInputRef.current?.click()
+    }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            handleFileUpload(e.target.files[0], 'image');
-            e.target.value = '';
+            handleFileUpload(e.target.files[0], "image")
+            e.target.value = ""
         }
-    };
+    }
 
     const handleVideoUpload = () => {
-        videoInputRef.current?.click();
-    };
+        videoInputRef.current?.click()
+    }
 
     const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            handleFileUpload(e.target.files[0], 'video');
-            e.target.value = '';
+            handleFileUpload(e.target.files[0], "video")
+            e.target.value = ""
         }
-    };
+    }
 
     if (!isMounted) {
         return (
             <div className="flex-1 rounded-xl bg-gray-100 min-h-60 flex items-center justify-center">
                 <p>Editor loading...</p>
             </div>
-        );
+        )
     }
 
     return (
@@ -179,13 +183,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                         📷
                     </button>
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleImageChange}
-                        ref={imageInputRef}
-                    />
+                    <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} ref={imageInputRef} />
 
                     {/* Video Upload Button */}
                     <button
@@ -197,13 +195,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                         ▶️
                     </button>
 
-                    <input
-                        type="file"
-                        accept="video/*"
-                        className="hidden"
-                        onChange={handleVideoChange}
-                        ref={videoInputRef}
-                    />
+                    <input type="file" accept="video/*" className="hidden" onChange={handleVideoChange} ref={videoInputRef} />
                 </div>
 
                 <div className="flex-1">
@@ -214,14 +206,13 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                         readOnly={progress > 0 && progress < 100}
                         modules={{
                             toolbar: [
-                                [{ 'header': [1, 2, 3, false] }],
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                ['link', 'blockquote', 'code-block'],
-                                ['clean']
+                                [{ header: [1, 2, 3, false] }],
+                                ["bold", "italic", "underline", "strike"],
+                                [{ list: "ordered" }, { list: "bullet" }],
+                                ["link", "blockquote", "code-block"],
+                                ["clean"],
                             ],
                         }}
-                        // formats={formats}
                         placeholder="Start writing your blog content here..."
                         className="min-h-60 rounded-xl bg-white shadow-md"
                     />
@@ -249,7 +240,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
 
-export default EditorSection;
+export default EditorSection

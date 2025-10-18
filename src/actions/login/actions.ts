@@ -1,5 +1,6 @@
 "use server";
 
+import { getUserServer } from "@/utils/get-user-server";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -98,6 +99,42 @@ export async function getProfile() {
     email: profile.email,
     role: profile.role,
     img: profile.img,
-    title: profile.title
+    title: profile.title,
+    created_at: profile.created_at
   };
+}
+
+export async function updateProfile({ imgUrl, username, title }: { imgUrl?: string, username?: string, title?: string }) {
+  const supabase = await createClient();
+  const user = await getUserServer();
+
+  if (!user) {
+    return { error: "User not authenticated" };
+  }
+
+  const { error: updateUserError } = await supabase.auth.updateUser({
+    data: {
+      full_name: username,
+      avatar_url: imgUrl,
+    },
+  })
+
+  if (updateUserError) {
+    console.log("Error: " + updateUserError.message);
+    return { error: updateUserError.message };
+  }
+
+  const { data, error } = await supabase
+    .from("UserProfile")
+    .update({ img: imgUrl, username, title })
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.log("Error: " + error.message);
+    return { error: error.message };
+  }
+
+  revalidatePath("/", "layout");
+  return { success: true };
 }
