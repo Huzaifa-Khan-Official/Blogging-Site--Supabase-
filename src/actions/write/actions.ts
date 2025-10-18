@@ -319,7 +319,6 @@ export async function deleteFile(url: string) {
 
 export async function deleteBlog(id: string) {
   const supabase = await createClient();
-  console.log("id ==>", id);
   const { error } = await supabase.from("Blogs").delete().eq("id", id);
   if (error) {
     console.log("Error in deleteBlog:", error.message);

@@ -30,8 +30,6 @@ export async function getComments(blogId: string) {
     )
   `).eq("blog_id", blogId);
 
-    console.log("data", data)
-
     if (error) {
         console.log("Error in getComments:", error.message);
         return { error: error.message };
@@ -63,9 +61,7 @@ export async function updateComment(commentId: string, content: string, userId: 
         .select()
         .eq("id", commentId)
         .eq("user_id", user?.id)
-        .single()
-
-    console.log("comment", comment)
+        .single();
 
     if (fetchError || !comment || comment.user_id !== userId) {
         return { data: null, error: "Unauthorized to update this comment" }

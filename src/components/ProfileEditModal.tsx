@@ -57,7 +57,6 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ user, onClos
 
         if (selectedFile) {
             const uploaded = await uploadFile(selectedFile)
-            console.log("uploaded", uploaded)
             if (uploaded) {
                 newAvatarUrl = uploaded
             } else {

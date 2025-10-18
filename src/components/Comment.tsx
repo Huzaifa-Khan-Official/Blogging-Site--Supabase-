@@ -100,9 +100,6 @@ export default function Comment({
         setEditedContent(comment.description)
         setIsEditing(false)
     }
-
-    console.log("comment ==>", comment)
-
     return (
         <div className="border rounded-lg p-4 mb-4 bg-white">
             <div className="flex justify-between items-start mb-2">

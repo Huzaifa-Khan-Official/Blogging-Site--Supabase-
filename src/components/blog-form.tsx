@@ -56,7 +56,6 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode = "create", slug, onSuccess })
                     toast.error(error)
                 } else {
                     const blogData = Array.isArray(data) ? (data[0] ?? null) : (data ?? null)
-                    console.log("blogData ==>", blogData);
                     setData(blogData)
 
                     if (blogData) {
