@@ -94,13 +94,7 @@ export async function getBlogs(search?: string | null, category?: string | null,
     `);
 
   if (search) {
-    query = query.or(`
-      title.ilike.%${search}%,
-      description.ilike.%${search}%,
-      content.ilike.%${search}%,
-      category.ilike.%${search}%,
-      UserProfile.username.ilike.%${search}%
-    `);
+    query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,content.ilike.%${search}%,category.ilike.%${search}%`);
   }
 
   if (category && category !== 'all') {
