@@ -25,19 +25,22 @@ const categoryItems = [
 interface SideMenuProps {
     currentSort?: string;
     currentCategory?: string | null;
+    currentSearch?: string | null;
 }
 
-const SideMenu = ({ currentSort = 'newest', currentCategory }: SideMenuProps) => {
+const SideMenu = ({ currentSort = 'newest', currentCategory, currentSearch }: SideMenuProps) => {
     const router = useRouter();
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newParams = new URLSearchParams(window.location.search);
+        const currentUrl = new URL(window.location.href);
+        const newParams = new URLSearchParams(currentUrl.search);
         newParams.set('sort', e.target.value);
         router.push(`/blogs?${newParams.toString()}`);
     }
 
     const handleCategoryChange = (category: string) => {
-        const newParams = new URLSearchParams(window.location.search);
+        const currentUrl = new URL(window.location.href);
+        const newParams = new URLSearchParams(currentUrl.search);
         if (category) {
             newParams.set('cat', category);
         } else {
@@ -49,7 +52,8 @@ const SideMenu = ({ currentSort = 'newest', currentCategory }: SideMenuProps) =>
     return (
         <div className='px-4 h-max sticky top-6 pb-6'>
             <h1 className='mb-4 text-sm font-medium'>Search</h1>
-            <Search />
+            <Search currentSearch={currentSearch} />
+
             <h1 className='mt-6 mb-4 text-sm font-medium'>Filter</h1>
             <div className='flex flex-col gap-2 text-sm'>
                 {filterItems.map(item => (

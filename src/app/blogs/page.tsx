@@ -1,19 +1,13 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useState, use } from 'react';
 import BlogList from '@/components/BlogList';
 import SideMenu from '@/components/SideMenu';
-import BlogCardSkeleton from '@/components/skeletons/BlogCardSkeleton';
 
-function PostListContent() {
+const PostListPage = ({ searchParams }: { searchParams: Promise<{ [key: string]: string | null }> }) => {
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState('');
-    const searchParams = useSearchParams();
-
-    const search = searchParams.get('search');
-    const category = searchParams.get('cat');
-    const sort = searchParams.get('sort');
+    const { sort, cat: category, search } = use(searchParams);
 
     useEffect(() => {
         if (search) {
@@ -48,32 +42,11 @@ function PostListContent() {
                     <SideMenu
                         currentSort={sort || 'newest'}
                         currentCategory={category}
+                        currentSearch={search}
                     />
                 </div>
             </div>
         </div>
-    );
-}
-
-const PostListPage = () => {
-    return (
-        <Suspense fallback={
-            <div>
-                <h1 className='mt-5 mb-8 text-2xl capitalize'>Loading...</h1>
-                <div className='flex flex-col-reverse justify-between md:flex-row gap-8'>
-                    <div className='xl:w-3/4'>
-                        {[...Array(3)].map((_, i) => (
-                            <BlogCardSkeleton key={i} />
-                        ))}
-                    </div>
-                    <div className='hidden md:block'>
-                        <SideMenu />
-                    </div>
-                </div>
-            </div>
-        }>
-            <PostListContent />
-        </Suspense>
     );
 }
 

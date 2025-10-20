@@ -1,17 +1,20 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
-const Search = () => {
+interface SearchProps {
+  currentSearch?: string | null;
+}
+
+const Search = ({ currentSearch }: SearchProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(currentSearch || '');
 
   const handleSearch = () => {
     const query = searchQuery.trim();
-
-    const newParams = new URLSearchParams(searchParams.toString());
+    const currentUrl = new URL(window.location.href);
+    const newParams = new URLSearchParams(currentUrl.search);
 
     if (query) {
       newParams.set('search', query);
