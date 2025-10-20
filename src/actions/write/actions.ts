@@ -39,7 +39,7 @@ export async function saveBlog(formData: FormData) {
 
   if (checkError) {
     console.error("Error checking existing slug:", checkError);
-    return { error: "Failed to check existing posts" };
+    return { error: "Failed to check existing blogs" };
   }
 
   let counter = 2;
