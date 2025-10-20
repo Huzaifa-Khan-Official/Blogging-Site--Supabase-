@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, type UseFormRegister } from "react-hook-form"
 import { toast } from "react-toastify"
 import { getBlog, saveBlog, uploadFile } from "@/actions/write/actions"
 import CoverImageUpload from "@/components/CoverImageUpload"
@@ -28,6 +28,12 @@ interface BlogPost {
     img?: string
 }
 
+interface FormData {
+    title: string
+    category: string
+    desc: string
+}
+
 const BlogForm: React.FC<BlogFormProps> = ({ mode = "create", slug, onSuccess }) => {
     const params = useParams<{ slug?: string }>()
     const effectiveSlug = slug || params?.slug
@@ -44,7 +50,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode = "create", slug, onSuccess })
         formState: { errors },
         reset,
         setValue,
-    } = useForm()
+    } = useForm<FormData>()
 
     useEffect(() => {
         if (mode === "edit" && effectiveSlug) {
@@ -73,7 +79,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode = "create", slug, onSuccess })
         }
     }, [mode, effectiveSlug, setValue])
 
-    const onSubmit = async (formData: any) => {
+    const onSubmit = async (formData: FormData) => {
         setIsLoading(true)
 
         let imageUrl: string | null = null
@@ -122,11 +128,11 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode = "create", slug, onSuccess })
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 flex-1 mb-20">
                 <CoverImageUpload coverImage={coverImage} onCoverImageChange={setCoverImage} existingImage={data?.img} />
 
-                <TitleInput register={register} errors={errors} />
+                <TitleInput register={register as unknown as UseFormRegister<{ title: string }>} errors={errors} />
 
-                <CategorySelect register={register} errors={errors} />
+                <CategorySelect register={register as unknown as UseFormRegister<{ category: string }>} errors={errors} />
 
-                <DescriptionTextarea register={register} errors={errors} />
+                <DescriptionTextarea register={register as unknown as UseFormRegister<{ desc: string }>} errors={errors} />
 
                 <EditorSection content={content} onContentChange={setContent} />
 

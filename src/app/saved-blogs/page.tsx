@@ -6,7 +6,7 @@ import BlogCardSkeleton from "@/components/skeletons/BlogCardSkeleton";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const page = () => {
+const SavedBlogs = () => {
   const [data, setData] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,8 @@ const page = () => {
         toast.error(message);
       } else {
         setData(
-          (blogs ?? []).map((blog: any) => ({
+          // @ts-expect-error - API response type needs proper interface
+          (blogs ?? []).map((blog: BlogPost & { author?: { id?: string } }) => ({
             ...blog,
             user_id: blog.author?.id ?? null,
           }))
@@ -43,7 +44,7 @@ const page = () => {
 
   return (
     <div>
-      <h1 className='mt-5 mb-8 text-2xl'>Saved Blog's</h1>
+      <h1 className='mt-5 mb-8 text-2xl'>Saved Blog&apos;s</h1>
 
       {
         data.length === 0 && (
@@ -58,4 +59,4 @@ const page = () => {
   )
 }
 
-export default page
+export default SavedBlogs;

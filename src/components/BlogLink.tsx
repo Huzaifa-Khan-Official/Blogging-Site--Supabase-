@@ -10,11 +10,7 @@ interface BlogLinkProps {
 
 export default function BlogLink({ slug, children, className }: BlogLinkProps) {
     const handleClick = async () => {
-        try {
-            await incrementBlogVisits(slug);
-        } catch (error) {
-            console.error('Error tracking visit:', error)
-        }
+        await incrementBlogVisits(slug);
     }
 
     return (

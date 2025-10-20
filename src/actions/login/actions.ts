@@ -18,7 +18,7 @@ export async function login(formData: FormData) {
     password: formData.password,
   };
 
-  const { data, error } = await supabase.auth.signInWithPassword(credentials);
+  const { error } = await supabase.auth.signInWithPassword(credentials);
 
   if (error) {
     console.log("Error: " + error.message);
@@ -124,7 +124,7 @@ export async function updateProfile({ imgUrl, username, title }: { imgUrl?: stri
     return { error: updateUserError.message };
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("UserProfile")
     .update({ img: imgUrl, username, title })
     .eq("id", user.id)

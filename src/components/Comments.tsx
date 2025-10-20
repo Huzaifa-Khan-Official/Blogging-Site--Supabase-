@@ -2,28 +2,40 @@
 
 import { toast } from "react-toastify"
 import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import CommentSkeleton from "./skeletons/CommentSkeleton"
-import { getComments, addComment, deleteComment } from "@/actions/comment/actions"
+import { getComments, addComment } from "@/actions/comment/actions"
 import { createClient } from "@/utils/supabase/client"
 import { useAuth } from "@/context/AuthContext"
 import Comment from "./Comment"
 
+interface CommentFormData {
+    description: string
+}
+
 const Comments = ({ blogId }: { blogId: string }) => {
-    const [comments, setComments] = useState<any[]>([])
+    const [comments, setComments] = useState<Comment[]>([])
     const [loading, setLoading] = useState(true)
     const { user } = useAuth()
     const [isDeleting, setIsDeleting] = useState(false)
     const {
         register,
         handleSubmit,
-        formState: { errors },
         reset,
-    } = useForm()
+    } = useForm<CommentFormData>()
+
+    const fetchComments = useCallback(async () => {
+        setLoading(true)
+        const { data } = await getComments(blogId)
+        if (data) {
+            setComments(data)
+        }
+        setLoading(false)
+    }, [blogId])
 
     useEffect(() => {
         fetchComments()
-    }, [blogId])
+    }, [fetchComments])
 
     useEffect(() => {
         const supabase = createClient()
@@ -38,7 +50,7 @@ const Comments = ({ blogId }: { blogId: string }) => {
                     filter: `blog_id=eq.${blogId}`,
                 },
                 (payload) => {
-                    setComments((prev) => [...prev, payload.new])
+                    setComments((prev) => [...prev, payload.new as Comment])
                 },
             )
             .on(
@@ -50,7 +62,7 @@ const Comments = ({ blogId }: { blogId: string }) => {
                     filter: `blog_id=eq.${blogId}`,
                 },
                 (payload) => {
-                    setComments((prev) => prev.map((comment) => (comment.id === payload.new.id ? payload.new : comment)))
+                    setComments((prev) => prev.map((comment) => (comment.id === payload.new.id ? payload.new as Comment : comment)))
                 },
             )
             .subscribe()
@@ -60,23 +72,14 @@ const Comments = ({ blogId }: { blogId: string }) => {
         }
     }, [blogId])
 
-    const fetchComments = async () => {
-        setLoading(true)
-        const { data, error } = await getComments(blogId)
-        if (data) {
-            setComments(data)
-        }
-        setLoading(false)
-    }
-
     const fetchUpdatedComments = async () => {
-        const { data, error } = await getComments(blogId)
+        const { data } = await getComments(blogId)
         if (data) {
             setComments(data)
         }
     }
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: CommentFormData) => {
         if (!user) {
             toast.error("You must be logged in to comment")
             return
@@ -91,9 +94,9 @@ const Comments = ({ blogId }: { blogId: string }) => {
         }
     }
 
-    const handleDelete = async (commentId: string) => {
+    const handleDelete = async () => {
         setIsDeleting(true)
-        fetchUpdatedComments()
+        await fetchUpdatedComments()
         setIsDeleting(false)
     }
 
@@ -128,7 +131,13 @@ const Comments = ({ blogId }: { blogId: string }) => {
             ) : (
                 <div className="space-y-4">
                     {comments.map((comment) => (
-                        <Comment key={comment.id} comment={comment} isDeleting={isDeleting} onCommentDeleted={handleDelete} onCommentUpdated={fetchUpdatedComments} />
+                        <Comment
+                            key={comment.id}
+                            comment={comment}
+                            isDeleting={isDeleting}
+                            onCommentDeleted={handleDelete}
+                            onCommentUpdated={fetchUpdatedComments}
+                        />
                     ))}
                 </div>
             )}

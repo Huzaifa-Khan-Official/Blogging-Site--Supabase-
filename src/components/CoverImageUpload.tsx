@@ -12,7 +12,7 @@ interface CoverImageUploadProps {
 
 const CoverImageUpload: React.FC<CoverImageUploadProps> = ({ coverImage, onCoverImageChange, existingImage }) => {
     const coverImgRef = useRef<HTMLInputElement>(null)
-    const [preview, setPreview] = useState<string | null>(existingImage || null)
+    const [preview] = useState<string | null>(existingImage || null)
 
     const handleFileChange = (file: File) => {
         const FILE_LIMIT = 5 * 1024 * 1024 // 5MB
@@ -55,7 +55,7 @@ const CoverImageUpload: React.FC<CoverImageUploadProps> = ({ coverImage, onCover
             />
 
             {coverUrl && (
-                <img src={coverUrl || "/placeholder.svg"} alt="Cover" className="w-48 h-48 object-cover rounded-2xl" />
+                <Image src={coverUrl || "/placeholder.svg"} alt="Cover" className="w-48 h-48 object-cover rounded-2xl" width={192} height={192} />
             )}
         </>
     )

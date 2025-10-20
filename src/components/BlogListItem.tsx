@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { format } from "timeago.js";
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import BlogLink from './BlogLink';

@@ -101,9 +101,6 @@ const EditorSection: React.FC<EditorSectionProps> = ({ content, onContentChange 
                 toast.success(`${type === "image" ? "Image" : "Video"} uploaded successfully!`)
                 return fileUrl
             }
-        } catch (error) {
-            toast.error(`Failed to upload ${type}`)
-            console.error(`Upload error:`, error)
         } finally {
             setTimeout(() => setProgress(0), 1000)
         }
@@ -111,19 +108,19 @@ const EditorSection: React.FC<EditorSectionProps> = ({ content, onContentChange 
     }
 
     const handleDeleteFile = async (fileUrl: string, fileName: string, type: "image" | "video") => {
-        try {
-            setUploadedFiles((prev) => prev.filter((file) => file.url !== fileUrl))
+        setUploadedFiles((prev) => prev.filter((file) => file.url !== fileUrl))
 
-            const fileElementClass = type === "image" ? "uploaded-image-container" : "uploaded-video-container"
-            const regex = new RegExp(`<div class="${fileElementClass}" data-file-name="${fileName}"[\\s\\S]*?<\\/div>`, "g")
-            onContentChange(content.replace(regex, ""))
+        const fileElementClass = type === "image" ? "uploaded-image-container" : "uploaded-video-container"
+        const regex = new RegExp(`<div class="${fileElementClass}" data-file-name="${fileName}"[\\s\\S]*?<\\/div>`, "g")
+        onContentChange(content.replace(regex, ""))
 
-            await deleteFile(fileUrl)
+        const { success } = await deleteFile(fileUrl);
 
-            toast.success(`${type === "image" ? "Image" : "Video"} deleted successfully!`)
-        } catch (error) {
+        if (!success) {
             toast.error(`Failed to delete ${type}`)
-            console.error(`Delete error:`, error)
+            return
+        } else {
+            toast.success(`${type === "image" ? "Image" : "Video"} deleted successfully!`)
         }
     }
 

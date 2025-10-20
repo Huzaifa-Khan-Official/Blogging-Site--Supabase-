@@ -25,7 +25,13 @@ export async function saveBlog(formData: FormData) {
 
   let slug = baseSlug || 'blog-post';
 
-  let { data: existingBlog, error: checkError } = await supabase
+  let { data: existingBlog } = await supabase
+    .from("Blogs")
+    .select("slug")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  const { error: checkError } = await supabase
     .from("Blogs")
     .select("slug")
     .eq("slug", slug)
@@ -64,7 +70,7 @@ export async function saveBlog(formData: FormData) {
     created_at: new Date().toISOString(),
   };
 
-  const { data: res, error: insertError } = await supabase
+  const { error: insertError } = await supabase
     .from("Blogs")
     .insert([data])
     .select();
@@ -365,46 +371,42 @@ export async function incrementBlogVisits(slug: string) {
 }
 
 export const updateBlog = async (slug: string, formData: FormData) => {
-  try {
-    const supabase = await createClient()
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-    if (!user) {
-      return { error: "User not authenticated" }
-    }
-
-    // Get the existing blog to verify ownership
-    const { data: existingBlog, error: fetchError } = await supabase.from("Blogs").select("*").eq("slug", slug).single()
-
-    if (fetchError || !existingBlog) {
-      return { error: "Blog not found" }
-    }
-
-    if (existingBlog.author_id !== user.id) {
-      return { error: "You do not have permission to update this blog" }
-    }
-
-    // Update the blog
-    const { data, error } = await supabase
-      .from("Blogs")
-      .update({
-        title: formData.title,
-        category: formData.category,
-        description: formData.desc,
-        content: formData.content,
-        ...(formData.img && { img: formData.img }),
-      })
-      .eq("slug", slug)
-      .select()
-
-    if (error) {
-      return { error: error.message }
-    }
-
-    return { data, error: null }
-  } catch (error) {
-    return { error: "Failed to update blog" }
+  if (!user) {
+    return { error: "User not authenticated" }
   }
+
+  // Get the existing blog to verify ownership
+  const { data: existingBlog, error: fetchError } = await supabase.from("Blogs").select("*").eq("slug", slug).single()
+
+  if (fetchError || !existingBlog) {
+    return { error: "Blog not found" }
+  }
+
+  if (existingBlog.author_id !== user.id) {
+    return { error: "You do not have permission to update this blog" }
+  }
+
+  // Update the blog
+  const { data, error } = await supabase
+    .from("Blogs")
+    .update({
+      title: formData.title,
+      category: formData.category,
+      description: formData.desc,
+      content: formData.content,
+      ...(formData.img && { img: formData.img }),
+    })
+    .eq("slug", slug)
+    .select()
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { data, error: null }
 }

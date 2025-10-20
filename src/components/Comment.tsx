@@ -19,8 +19,8 @@ import Image from "next/image"
 
 interface CommentProps {
     comment: Comment
-    onCommentUpdated?: (updatedComment: any) => void
-    onCommentDeleted?: (commentId: string) => void
+    onCommentUpdated?: () => void
+    onCommentDeleted?: () => void
     isDeleting: boolean
 }
 
@@ -63,10 +63,8 @@ export default function Comment({
             setIsEditing(false)
 
             if (onCommentUpdated && data) {
-                onCommentUpdated(data[0])
+                onCommentUpdated()
             }
-        } catch (err) {
-            toast.error("Failed to update comment")
         } finally {
             setIsUpdating(false)
         }
@@ -87,10 +85,8 @@ export default function Comment({
             toast.success("Comment deleted successfully")
 
             if (onCommentDeleted) {
-                onCommentDeleted(comment.id)
+                onCommentDeleted()
             }
-        } catch (err) {
-            toast.error("Failed to delete comment")
         } finally {
             setIsDeleting(false)
         }
@@ -114,10 +110,10 @@ export default function Comment({
                         />
                         <div>
 
-                        <span className='font-medium'>{comment.author?.username}</span>
-                        <p className="text-sm text-gray-500">
-                            {format(comment.created_at)}
-                        </p>
+                            <span className='font-medium'>{comment.author?.username}</span>
+                            <p className="text-sm text-gray-500">
+                                {format(comment.created_at)}
+                            </p>
                         </div>
                     </div>
                 </div>

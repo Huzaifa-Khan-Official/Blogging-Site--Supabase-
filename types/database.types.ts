@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 interface UserProfile {
   id: string;
   username: string;
@@ -7,7 +9,6 @@ interface UserProfile {
   role: string;
   saved_posts?: string[];
   created_at?: string;
-  user_metadata?: any;
 }
 
 interface BlogPost {

@@ -18,7 +18,8 @@ const MyBlogsPage = () => {
         toast.error(error);
       } else {
         setBlogs(
-          (data ?? []).map((blog: any) => ({
+          // @ts-expect-error - API response type needs proper interface
+          (data ?? []).map((blog: BlogPost & { author?: { id?: string } }) => ({
             ...blog,
             user_id: blog.author?.id ?? null,
           }))
@@ -32,7 +33,7 @@ const MyBlogsPage = () => {
 
   return (
     <div>
-      <h1 className="mt-5 mb-8 text-2xl">My Blog's</h1>
+      <h1 className="mt-5 mb-8 text-2xl">My Blog&apos;s</h1>
 
       {isLoading ? (
         <div className="space-y-4">

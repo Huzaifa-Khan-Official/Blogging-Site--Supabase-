@@ -2,7 +2,7 @@ import type React from "react"
 import type { UseFormRegister, FieldErrors } from "react-hook-form"
 
 interface DescriptionTextareaProps {
-    register: UseFormRegister<any>
+    register: UseFormRegister<{ desc: string }>
     errors: FieldErrors
 }
 

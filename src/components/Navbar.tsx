@@ -28,9 +28,7 @@ interface NavLink {
   label: string
 }
 
-type NavbarProps = {}
-
-export const Navbar: React.FC<NavbarProps> = () => {
+export const Navbar = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [profileOpen, setProfileOpen] = useState<boolean>(false)
   const [editProfileOpen, setEditProfileOpen] = useState<boolean>(false)
@@ -46,15 +44,11 @@ export const Navbar: React.FC<NavbarProps> = () => {
   ]
 
   const logout = async (): Promise<void> => {
-    try {
-      const supabase = createClient()
-      const { error } = await supabase.auth.signOut()
-      if (!error) {
-        setLogoutConfirmOpen(false)
-        router.refresh()
-      }
-    } catch (error) {
-      console.error("Logout error:", error)
+    const supabase = createClient()
+    const { error } = await supabase.auth.signOut()
+    if (!error) {
+      setLogoutConfirmOpen(false)
+      router.refresh()
     }
   }
 

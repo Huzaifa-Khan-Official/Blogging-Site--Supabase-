@@ -12,7 +12,7 @@ const FeaturedPosts = () => {
 
   useEffect(() => {
     const fetchFeaturedPosts = async () => {
-      const { data, error } = await getFeaturedPosts();
+      const { data } = await getFeaturedPosts();
 
       if (data) {
         setFeaturedPosts(data);

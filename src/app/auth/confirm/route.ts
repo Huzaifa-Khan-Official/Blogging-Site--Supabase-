@@ -19,8 +19,6 @@ export async function GET(request: NextRequest) {
     if (!error) {
       redirect("/login");
     }
-
-    console.log("error ==>", error.message);
   }
 
   redirect("/error");

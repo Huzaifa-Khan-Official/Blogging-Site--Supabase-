@@ -2,7 +2,7 @@ import type React from "react"
 import type { UseFormRegister, FieldErrors } from "react-hook-form"
 
 interface TitleInputProps {
-    register: UseFormRegister<any>
+    register: UseFormRegister<{ title: string }>
     errors: FieldErrors
 }
 

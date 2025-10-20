@@ -14,7 +14,7 @@ const BlogList = () => {
     const search = searchParams.get('search');
     const category = searchParams.get('cat');
     const sort = searchParams.get('sort');
-    
+
     const fetchBlogs = async () => {
       const { data, error } = await getBlogs(search, category, sort);
 
@@ -22,7 +22,8 @@ const BlogList = () => {
         toast.error(error);
       } else {
         setData(
-          (data ?? []).map((blog: any) => ({
+          // @ts-expect-error - API response type needs proper interface
+          (data ?? []).map((blog: BlogPost & { author?: { id?: string } }) => ({
             ...blog,
             user_id: blog.author?.id ?? null,
           }))

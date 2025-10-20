@@ -2,7 +2,7 @@ import type React from "react"
 import type { UseFormRegister, FieldErrors } from "react-hook-form"
 
 interface CategorySelectProps {
-    register: UseFormRegister<any>
+    register: UseFormRegister<{ category: string }>
     errors: FieldErrors
 }
 

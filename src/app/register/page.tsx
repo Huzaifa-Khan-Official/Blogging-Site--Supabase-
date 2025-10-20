@@ -10,20 +10,25 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { signup } from "@/actions/login/actions";
 
+type FormData = {
+  username: string;
+  email: string;
+  password: string;
+};
+
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<FormData>();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     const result = await signup(data);
 
     if (result.error) {

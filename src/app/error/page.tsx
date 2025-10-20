@@ -1,14 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const ErrorPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="max-w-md w-full text-center p-8">
-        <img 
+        <Image
           src="/globe.svg" 
           alt="Error"
           className="w-32 h-32 mx-auto mb-6 animate-bounce"
+          width={128}
+          height={128}
         />
         <h1 className="text-4xl font-bold text-red-600 mb-4">Oops!</h1>
         <p className="text-gray-800 text-lg mb-6">

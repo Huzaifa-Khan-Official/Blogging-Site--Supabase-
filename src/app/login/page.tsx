@@ -8,6 +8,11 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import { login } from "@/actions/login/actions";
 
+interface FormData {
+  email: string;
+  password: string;
+}
+
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
@@ -16,13 +21,13 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<FormData>();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     setIsLoggingIn(true);
     const result = await login(data);
 
@@ -203,7 +208,7 @@ const LoginPage = () => {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-gray-900 hover:underline">
               Sign up
             </Link>
