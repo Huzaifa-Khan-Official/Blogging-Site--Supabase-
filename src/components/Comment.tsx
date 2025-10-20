@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Image from "next/image"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog"
 
 interface CommentProps {
     comment: Comment
@@ -34,6 +35,7 @@ export default function Comment({
     const [editedContent, setEditedContent] = useState(comment.description)
     const [isUpdating, setIsUpdating] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
     const isAdmin = user?.role === 'admin';
     const isOwner = user?.id === comment.user_id;
@@ -71,8 +73,6 @@ export default function Comment({
     }
 
     const handleDelete = async () => {
-        if (!confirm("Are you sure you want to delete this comment?")) return
-
         setIsDeleting(true)
         try {
             const { error } = await deleteComment(comment.id)
@@ -88,7 +88,8 @@ export default function Comment({
                 onCommentDeleted()
             }
         } finally {
-            setIsDeleting(false)
+            setIsDeleting(false);
+            setDeleteConfirmOpen(false);
         }
     }
 
@@ -124,7 +125,7 @@ export default function Comment({
                             <DropdownMenuContent>
                                 <DropdownMenuItem onClick={() => setIsEditing(true)}>Update</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => handleDelete()}>
+                                <DropdownMenuItem onClick={() => setDeleteConfirmOpen(true)}>
                                     <span className='text-sm text-red-500 hover:text-red-400 cursor-pointer'>
                                         Delete
                                         {
@@ -158,6 +159,28 @@ export default function Comment({
             ) : (
                 <p className="text-gray-700 whitespace-pre-wrap">{comment.description}</p>
             )}
+
+            {/* Delete Comment Confirmation Modal */}
+            <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+                <DialogContent className="sm:max-w-[425px] bg-white border-2 border-red-300 rounded-lg">
+                    <DialogHeader>
+                        <DialogTitle className="text-red-900">Confirm Delete</DialogTitle>
+                        <DialogDescription className="text-gray-600">Are you sure you want to delete?</DialogDescription>
+                    </DialogHeader>
+                    <div className="flex gap-3 justify-end pt-4">
+                        <Button
+                            variant="outline"
+                            onClick={() => setDeleteConfirmOpen(false)}
+                            className="border-gray-300 hover:bg-gray-100"
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={handleDelete} className="bg-red-600 hover:bg-red-700 cursor-pointer">
+                            Delete
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

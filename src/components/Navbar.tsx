@@ -34,7 +34,6 @@ export const Navbar = () => {
   const [editProfileOpen, setEditProfileOpen] = useState<boolean>(false)
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState<boolean>(false)
   const { user, isLoading } = useAuth()
-  const router = useRouter()
 
   const navLinks: NavLink[] = [
     { to: "/", label: "Home" },
@@ -48,7 +47,6 @@ export const Navbar = () => {
     const { error } = await supabase.auth.signOut()
     if (!error) {
       setLogoutConfirmOpen(false)
-      router.refresh()
     }
   }
 
